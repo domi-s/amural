@@ -104,3 +104,35 @@ select:focus[data-flux-control] {
         cursor: pointer;
     }
 }
+
+/* The map of Europe in the language switcher. Marker tints on Paper: colour is for content, not chrome. */
+.europe-map svg {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.europe-map .country {
+    cursor: pointer;
+    transition: fill 120ms;
+}
+
+.europe-map .country:hover {
+    fill: color-mix(in srgb, var(--color-marker) 16%, var(--color-paper));
+}
+
+.europe-map .country.speaks-current {
+    fill: color-mix(in srgb, var(--color-marker) 9%, var(--color-paper));
+}
+
+.europe-map .country.is-selected {
+    fill: var(--color-marker);
+}
+
+.europe-map .country:focus {
+    outline: none;
+}
+
+.europe-map .country:focus-visible {
+    stroke-width: 4.5;
+}

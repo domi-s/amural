@@ -94,5 +94,14 @@
     "Worksheet": "Worksheet",
     "Link": "Link",
     "Reviewed": "Reviewed",
-    "No topics yet.": "No topics yet."
+    "No topics yet.": "No topics yet.",
+    "List": "List",
+    "Map": "Map",
+    "Choose by": "Choose by",
+    "Choose a country on the map": "Choose a country on the map",
+    "Loading the map…": "Loading the map…",
+    "The map could not be loaded. Use the list instead.": "The map could not be loaded. Use the list instead.",
+    "Shaded: where :language is spoken": "Shaded: where :language is spoken",
+    "No language of this country is available yet.": "No language of this country is available yet.",
+    "Other languages spoken here are not available yet.": "Other languages spoken here are not available yet."
 }

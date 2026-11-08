@@ -103,6 +103,15 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Link`
 - `Reviewed`
 - `No topics yet.`
+- `List`
+- `Map`
+- `Choose by`
+- `Choose a country on the map`
+- `Loading the map…`
+- `The map could not be loaded. Use the list instead.`
+- `Shaded: where :language is spoken`
+- `No language of this country is available yet.`
+- `Other languages spoken here are not available yet.`
 
 ## Romanian (ro) - TODO native check
 
@@ -202,6 +211,15 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Link`
 - `Reviewed`
 - `No topics yet.`
+- `List`
+- `Map`
+- `Choose by`
+- `Choose a country on the map`
+- `Loading the map…`
+- `The map could not be loaded. Use the list instead.`
+- `Shaded: where :language is spoken`
+- `No language of this country is available yet.`
+- `Other languages spoken here are not available yet.`
 
 ## Checked
 
