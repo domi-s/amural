@@ -25,7 +25,8 @@ class ProfileUpdateTest extends TestCase
         $this->actingAs($user);
 
         $response = Volt::test('settings.profile')
-            ->set('name', 'Test User')
+            ->set('first_name', 'Test')
+            ->set('last_name', 'User')
             ->set('email', 'test@example.com')
             ->call('updateProfileInformation');
 
@@ -45,7 +46,8 @@ class ProfileUpdateTest extends TestCase
         $this->actingAs($user);
 
         $response = Volt::test('settings.profile')
-            ->set('name', 'Test User')
+            ->set('first_name', 'Test')
+            ->set('last_name', 'User')
             ->set('email', $user->email)
             ->call('updateProfileInformation');
 
