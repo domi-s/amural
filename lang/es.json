@@ -26,5 +26,6 @@
     "Remove": "Quitar",
     "Move up": "Subir",
     "Move down": "Bajar",
-    "At least one language must remain.": "Debe quedar al menos un idioma."
+    "At least one language must remain.": "Debe quedar al menos un idioma.",
+    ":country flag": "Bandera de :country"
 }
