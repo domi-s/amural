@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             LocaleSeeder::class,
             CountrySeeder::class,
+            ConceptSpineSeeder::class,
         ]);
     }
 }
