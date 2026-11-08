@@ -22,7 +22,8 @@ class LanguageSwitcher extends Component
         $switch->execute($code, $user instanceof User ? $user : null, session()->driver());
 
         // Back to the page the visitor was on, without a ?lang= that would override the choice.
-        $this->redirect($this->previousUrlWithoutLang(), navigate: true);
+        // A full reload, not wire:navigate: the whole page (menus, <html lang>) changes language.
+        $this->redirect($this->previousUrlWithoutLang());
     }
 
     public function render(LocaleResolver $resolver): View

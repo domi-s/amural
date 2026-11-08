@@ -1,8 +1,12 @@
 <li>
     <button
         type="button"
-        wire:click="select('{{ $locale->code }}')"
-        @if ($locale->code === $current?->code) aria-current="true" @endif
+        @if ($locale->code === $current?->code)
+            aria-current="true"
+            x-on:click="open = false"
+        @else
+            wire:click="select('{{ $locale->code }}')"
+        @endif
         class="flex w-full items-baseline justify-between gap-3 px-3 py-2 text-left hover:bg-marker hover:text-paper focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-marker"
     >
         <span lang="{{ $locale->language }}" class="font-medium">

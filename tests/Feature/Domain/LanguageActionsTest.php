@@ -111,6 +111,35 @@ it('moves a language the user already has to the front without duplicating it', 
     expect(contentLocalesOf($user))->toBe(['de-DE', 'ro-RO', 'en-GB']);
 });
 
+it('also switches the interface language when the language is translated, for a signed-in user', function () {
+    $user = userWithLanguages(['en-GB']);
+
+    app(SwitchContentLocale::class)->execute('ro-RO', $user);
+
+    expect($user->fresh()->interface_locale)->toBe('ro-RO');
+    expect(contentLocalesOf($user))->toBe(['ro-RO', 'en-GB']);
+});
+
+it('leaves the interface language of a signed-in user alone for a language that is not translated', function () {
+    $user = userWithLanguages(['en-GB']);
+
+    app(SwitchContentLocale::class)->execute('de-DE', $user);
+
+    expect($user->fresh()->interface_locale)->toBe('en-GB');
+    expect(contentLocalesOf($user))->toBe(['de-DE', 'en-GB']);
+});
+
+it('sets the interface language of a guest in the session only for a translated language', function () {
+    $session = new Store('test', new ArraySessionHandler(120));
+
+    app(SwitchContentLocale::class)->execute('de-DE', null, $session);
+    expect($session->has(LocaleResolver::SESSION_INTERFACE))->toBeFalse();
+
+    app(SwitchContentLocale::class)->execute('es-ES', null, $session);
+    expect($session->get(LocaleResolver::SESSION_INTERFACE))->toBe('es-ES');
+    expect($session->get(LocaleResolver::SESSION_CONTENT))->toBe('es-ES');
+});
+
 it('stores the choice in the session for a guest and writes nothing to the database', function () {
     $session = new Store('test', new ArraySessionHandler(120));
 

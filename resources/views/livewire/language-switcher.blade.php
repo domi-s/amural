@@ -2,6 +2,8 @@
     x-data="{ open: false }"
     x-on:keydown.escape.window="open = false"
     x-on:click.outside="open = false"
+    wire:loading.class="opacity-60"
+    wire:target="select"
     class="relative font-sans text-sm text-marker"
 >
     <button

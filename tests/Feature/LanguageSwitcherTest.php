@@ -37,7 +37,8 @@ it('lists all 26 languages with the launch languages first', function () {
     // Launch languages in sort order, then the rest.
     $component->assertSeeInOrder(['English', 'Română', 'Español', 'Български', 'Hrvatski', 'Íslenska']);
 
-    expect(substr_count($component->html(), 'wire:click="select('))->toBe(26);
+    // All 26 are listed; the one already showing needs no request, so 25 can be chosen.
+    expect(substr_count($component->html(), 'wire:click="select('))->toBe(25);
 });
 
 it('labels each language in its own language, with the English name beside it', function () {
@@ -53,6 +54,45 @@ it('does not repeat the English name when it is the same as the native name', fu
 
     expect($html)->not->toContain('<span class="text-xs opacity-70">English</span>');
     expect($html)->toContain('<span class="text-xs opacity-70">Romanian</span>');
+});
+
+it('sends no request for the language that is already showing', function () {
+    $html = Livewire::test(LanguageSwitcher::class)->html();
+
+    expect($html)->not->toContain("select('en-GB')");
+    expect($html)->toContain("select('ro-RO')");
+});
+
+it('changes the interface too when the language is one the interface is translated into', function () {
+    Livewire::test(LanguageSwitcher::class)->call('select', 'ro-RO');
+
+    $this->get('/')
+        ->assertSee('Un spațiu comun de lecții și resurse pentru profesorii și elevii din Europa.')
+        ->assertSee('<html lang="ro"', false);
+});
+
+it('changes the interface language of a signed-in user too, and keeps it for next time', function () {
+    $user = readerOf(['en-GB']);
+
+    Livewire::actingAs($user)->test(LanguageSwitcher::class)->call('select', 'es-ES');
+
+    expect($user->fresh()->interface_locale)->toBe('es-ES');
+    $this->actingAs($user->fresh())->get('/')->assertSee('Un espacio común de lecciones y recursos');
+});
+
+it('leaves the interface alone for a language it is not translated into', function () {
+    Livewire::test(LanguageSwitcher::class)->call('select', 'de-DE');
+
+    expect(session('content_locale'))->toBe('de-DE');
+    expect(session('interface_locale'))->toBeNull();
+    $this->get('/')->assertSee('<html lang="en"', false);
+});
+
+it('reloads the whole page instead of navigating, so the new language applies everywhere', function () {
+    $component = Livewire::test(LanguageSwitcher::class)->call('select', 'ro-RO');
+
+    $component->assertRedirect('/');
+    expect($component->effects)->not->toHaveKey('redirectUsingNavigate');
 });
 
 it('marks the current language', function () {
