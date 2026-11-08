@@ -3,9 +3,9 @@
 use Database\Factories\UserFactory;
 use Database\Seeders\LocaleSeeder;
 
-const ENGLISH_LINE = 'Teachers share, improve and remix lessons in every European language, and credit follows the work.';
-const SPANISH_LINE = 'Los docentes comparten, mejoran y reinventan lecciones en cualquier idioma europeo, y el crédito sigue al trabajo.';
-const ROMANIAN_LINE = 'Profesorii împărtășesc, îmbunătățesc și adaptează lecții în orice limbă europeană, iar creditul urmează munca.';
+const ENGLISH_LINE = "A shared commons of lessons and resources for Europe's teachers and learners.";
+const SPANISH_LINE = 'Un espacio común de lecciones y recursos para los docentes y estudiantes de Europa.';
+const ROMANIAN_LINE = 'Un spațiu comun de lecții și resurse pentru profesorii și elevii din Europa.';
 
 beforeEach(function () {
     $this->seed(LocaleSeeder::class);

@@ -7,7 +7,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 
 ## Spanish (es) - TODO native check
 
-- `Teachers share, improve and remix lessons in every European language, and credit follows the work.`
+- `A shared commons of lessons and resources for Europe's teachers and learners.`
+- `Lessons, shared across Europe.`
 - `An Aspire Education Product. Coming soon :-)`
 - `Language`
 - `Show topics in`
@@ -37,7 +38,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 
 ## Romanian (ro) - TODO native check
 
-- `Teachers share, improve and remix lessons in every European language, and credit follows the work.`
+- `A shared commons of lessons and resources for Europe's teachers and learners.`
+- `Lessons, shared across Europe.`
 - `An Aspire Education Product. Coming soon :-)`
 - `Language`
 - `Show topics in`
