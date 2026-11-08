@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Concept;
 use App\Models\Lesson;
+use App\Support\LocaleResolver;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
 
@@ -14,7 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // One resolver per request, so the language chain is worked out once.
+        $this->app->scoped(LocaleResolver::class, fn ($app) => new LocaleResolver(fn () => $app['request']));
     }
 
     /**

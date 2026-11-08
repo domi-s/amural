@@ -86,3 +86,21 @@ select:focus[data-flux-control] {
 /* \[:where(&)\]:size-4 {
     @apply size-4;
 } */
+
+[x-cloak] {
+    display: none !important;
+}
+
+@layer base {
+    /* Tailwind's reset gives buttons the plain arrow. Every control you can click shows a pointer; disabled ones keep the plain arrow. */
+    button:not(:disabled),
+    [role='button']:not([aria-disabled='true']),
+    summary,
+    select,
+    input[type='radio'],
+    input[type='checkbox'],
+    label:has(input[type='radio']),
+    label:has(input[type='checkbox']) {
+        cursor: pointer;
+    }
+}
