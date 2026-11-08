@@ -1,11 +1,17 @@
 <?php
 
+use App\Http\Controllers\ShowTopic;
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+// Public: anyone can read a topic, in their own language.
+Route::get('/topic/{concept:public_id}/{slug?}', ShowTopic::class)
+    ->where('slug', '[A-Za-z0-9._-]+')
+    ->name('topic.show');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

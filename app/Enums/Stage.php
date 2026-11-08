@@ -11,6 +11,18 @@ enum Stage: string
     case Undergraduate = 'undergraduate';
     case Graduate = 'graduate';
 
+    public function label(): string
+    {
+        return match ($this) {
+            self::EarlyPrimary => __('Early primary'),
+            self::Primary => __('Primary'),
+            self::LowerSecondary => __('Lower secondary'),
+            self::UpperSecondary => __('Upper secondary'),
+            self::Undergraduate => __('Undergraduate'),
+            self::Graduate => __('Graduate'),
+        };
+    }
+
     /** Position along the school path, used to check stage_from <= stage_to. */
     public function order(): int
     {
