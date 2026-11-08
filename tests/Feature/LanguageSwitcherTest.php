@@ -48,6 +48,13 @@ it('labels each language in its own language, with the English name beside it', 
         ->assertSee('Bulgarian');
 });
 
+it('does not repeat the English name when it is the same as the native name', function () {
+    $html = Livewire::test(LanguageSwitcher::class)->html();
+
+    expect($html)->not->toContain('<span class="text-xs opacity-70">English</span>');
+    expect($html)->toContain('<span class="text-xs opacity-70">Romanian</span>');
+});
+
 it('marks the current language', function () {
     $user = readerOf(['es-ES']);
 

@@ -8,6 +8,8 @@
         <span lang="{{ $locale->language }}" class="font-medium">
             @if ($locale->code === $current?->code)<span aria-hidden="true">&#9632;</span> @endif{{ $locale->native_name }}
         </span>
-        <span class="text-xs opacity-70">{{ $locale->english_name }}</span>
+        @if ($locale->english_name !== $locale->native_name)
+            <span class="text-xs opacity-70">{{ $locale->english_name }}</span>
+        @endif
     </button>
 </li>

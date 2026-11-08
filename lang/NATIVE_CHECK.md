@@ -11,6 +11,29 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `An Aspire Education Product. Coming soon :-)`
 - `Language`
 - `Show topics in`
+- `Profile`
+- `First name`
+- `Last name`
+- `Username`
+- `Bio`
+- `Country`
+- `Choose a country`
+- `Avatar`
+- `Avatar :number`
+- `Save profile`
+- `Saved.`
+- `Languages`
+- `Interface language`
+- `Menus, buttons and messages are shown in this language.`
+- `Languages I read and teach`
+- `Topics are shown in the first of these that has a name.`
+- `Add a language`
+- `Choose a language`
+- `Add`
+- `Remove`
+- `Move up`
+- `Move down`
+- `At least one language must remain.`
 
 ## Romanian (ro) - TODO native check
 
@@ -18,6 +41,29 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `An Aspire Education Product. Coming soon :-)`
 - `Language`
 - `Show topics in`
+- `Profile`
+- `First name`
+- `Last name`
+- `Username`
+- `Bio`
+- `Country`
+- `Choose a country`
+- `Avatar`
+- `Avatar :number`
+- `Save profile`
+- `Saved.`
+- `Languages`
+- `Interface language`
+- `Menus, buttons and messages are shown in this language.`
+- `Languages I read and teach`
+- `Topics are shown in the first of these that has a name.`
+- `Add a language`
+- `Choose a language`
+- `Add`
+- `Remove`
+- `Move up`
+- `Move down`
+- `At least one language must remain.`
 
 ## Checked
 

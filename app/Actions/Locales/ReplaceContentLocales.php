@@ -22,6 +22,9 @@ class ReplaceContentLocales
         Validator::make(['locales' => $codes], [
             'locales' => ['required', 'array', 'min:1'],
             'locales.*' => ['required', 'string', 'distinct', Rule::exists('locales', 'code')],
+        ], [
+            'locales.required' => __('At least one language must remain.'),
+            'locales.min' => __('At least one language must remain.'),
         ])->validate();
 
         DB::transaction(function () use ($user, $codes) {
