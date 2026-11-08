@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             LocaleSeeder::class,
             CountrySeeder::class,
             ConceptSpineSeeder::class,
+            DemoSeeder::class,
         ]);
     }
 }
