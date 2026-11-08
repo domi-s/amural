@@ -252,3 +252,23 @@ it('only ever changes the signed-in user\'s own languages', function () {
 
     expect(contentLocalesFor($other))->toBe(['es-ES']);
 });
+
+it('shows a flag beside each language, in the interface list and in the content list', function () {
+    $this->actingAs($this->user);
+
+    $html = Volt::test('profile')->html();
+
+    // 3 interface languages, 2 content languages, plus the user's country (RO).
+    expect(substr_count($html, 'svg/flags.svg#flag-'))->toBe(6);
+    expect($html)->toContain('aria-label="Romanian flag"')->toContain('aria-label="Romania flag"');
+});
+
+it('shows the flag of the chosen country beside the country picker as it changes', function () {
+    $this->actingAs($this->user);
+
+    $component = Volt::test('profile')->set('country_code', 'AT');
+    expect($component->html())->toContain('aria-label="Austria flag"');
+
+    $component->set('country_code', '');
+    expect($component->html())->not->toContain('aria-label="Austria flag"')->not->toContain('aria-label="Romania flag"');
+});

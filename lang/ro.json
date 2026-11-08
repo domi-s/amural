@@ -27,5 +27,6 @@
     "Move up": "Mută în sus",
     "Move down": "Mută în jos",
     "At least one language must remain.": "Trebuie să rămână cel puțin o limbă.",
-    ":country flag": "Drapelul :country"
+    ":country flag": "Drapelul :country",
+    ":language flag": "Drapelul :language"
 }

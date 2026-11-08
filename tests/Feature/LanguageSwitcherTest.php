@@ -174,3 +174,11 @@ it('is labelled in the interface language', function () {
     $this->get('/', ['Accept-Language' => 'ro'])->assertSee('Limbă:', false);
     $this->get('/', ['Accept-Language' => 'es'])->assertSee('Idioma:', false);
 });
+
+it('shows a flag with an accessible name beside every language, and the current one on the button', function () {
+    $html = Livewire::test(LanguageSwitcher::class)->html();
+
+    // 26 in the list plus the current language on the button.
+    expect(substr_count($html, 'svg/flags.svg#flag-'))->toBe(27);
+    expect($html)->toContain('aria-label="Romanian flag"')->toContain('aria-label="Bulgarian flag"');
+});
