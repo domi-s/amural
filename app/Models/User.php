@@ -3,7 +3,11 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserRole;
+use App\Models\Concerns\HasPublicId;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -11,17 +15,27 @@ use Illuminate\Support\Str;
 class User extends Authenticatable // implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, HasPublicId, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
+     * `name` is a generated column (first_name + last_name) and is never written.
+     *
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'public_id',
+        'username',
+        'first_name',
+        'last_name',
         'email',
         'password',
+        'interface_locale',
+        'country_code',
+        'bio',
+        'avatar_preset',
+        'role',
     ];
 
     /**
@@ -44,7 +58,37 @@ class User extends Authenticatable // implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => UserRole::class,
+            'avatar_preset' => 'integer',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (User $user) {
+            $user->username ??= $user->newUsername();
+            $user->interface_locale ??= 'en-GB';
+            $user->avatar_preset ??= random_int(1, 8);
+        });
+    }
+
+    public function publicIdPrefix(): string
+    {
+        return 'u';
+    }
+
+    /**
+     * A default username from the name, made unique with a number suffix.
+     */
+    private function newUsername(): string
+    {
+        $base = Str::of(Str::ascii($this->first_name.' '.$this->last_name))->lower()->slug('.')->value() ?: 'user';
+
+        do {
+            $candidate = $base.random_int(1, 99999);
+        } while (static::query()->where('username', $candidate)->exists());
+
+        return $candidate;
     }
 
     /**
@@ -56,5 +100,23 @@ class User extends Authenticatable // implements MustVerifyEmail
             ->explode(' ')
             ->map(fn (string $name) => Str::of($name)->substr(0, 1))
             ->implode('');
+    }
+
+    /** @return HasMany<UserContentLocale, $this> */
+    public function contentLocales(): HasMany
+    {
+        return $this->hasMany(UserContentLocale::class)->orderBy('position');
+    }
+
+    /** @return BelongsTo<Locale, $this> */
+    public function interfaceLocale(): BelongsTo
+    {
+        return $this->belongsTo(Locale::class, 'interface_locale', 'code');
+    }
+
+    /** @return BelongsTo<Country, $this> */
+    public function country(): BelongsTo
+    {
+        return $this->belongsTo(Country::class, 'country_code', 'code');
     }
 }

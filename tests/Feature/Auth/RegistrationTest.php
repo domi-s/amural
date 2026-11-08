@@ -19,8 +19,11 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
+        $this->seed(\Database\Seeders\LocaleSeeder::class);
+
         $response = Volt::test('auth.register')
-            ->set('name', 'Test User')
+            ->set('first_name', 'Test')
+            ->set('last_name', 'User')
             ->set('email', 'test@example.com')
             ->set('password', 'password')
             ->set('password_confirmation', 'password')
