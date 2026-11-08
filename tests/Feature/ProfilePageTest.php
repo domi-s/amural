@@ -238,7 +238,7 @@ it('labels the languages in their own language, with the English name beside', f
     $this->actingAs($this->user);
 
     Volt::test('profile')
-        ->assertSeeHtml('<span lang="ro" class="font-medium">română</span>')
+        ->assertSeeHtml('<span lang="ro" class="font-medium">Română</span>')
         ->assertSee('Romanian')
         ->assertSee('Topics are shown in the first of these that has a name.');
 });

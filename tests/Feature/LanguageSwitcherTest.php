@@ -28,14 +28,14 @@ it('shows a signed-in user\'s first content language as current', function () {
     $user = readerOf(['ro-RO', 'en-GB']);
 
     Livewire::actingAs($user)->test(LanguageSwitcher::class)
-        ->assertSeeHtml('aria-label="Language: română"');
+        ->assertSeeHtml('aria-label="Language: Română"');
 });
 
 it('lists all 26 languages with the launch languages first', function () {
     $component = Livewire::test(LanguageSwitcher::class);
 
     // Launch languages in sort order, then the rest.
-    $component->assertSeeInOrder(['English', 'română', 'español', 'български', 'hrvatski', 'íslenska']);
+    $component->assertSeeInOrder(['English', 'Română', 'Español', 'Български', 'Hrvatski', 'Íslenska']);
 
     expect(substr_count($component->html(), 'wire:click="select('))->toBe(26);
 });

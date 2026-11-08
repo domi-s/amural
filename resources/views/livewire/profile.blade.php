@@ -184,7 +184,7 @@ new #[Layout('components.layouts.app')] class extends Component {
                             @checked($locale->code === $currentInterface)
                             class="size-4"
                         />
-                        <span lang="{{ $locale->language }}" class="font-medium">{{ $locale->native_name }}</span>
+                        <span lang="{{ $locale->language }}" class="font-medium">{{ $locale->display_name }}</span>
                         @if ($locale->english_name !== $locale->native_name)
                             <span class="text-sm opacity-70">{{ $locale->english_name }}</span>
                         @endif
@@ -216,7 +216,7 @@ new #[Layout('components.layouts.app')] class extends Component {
                         <span x-sort:handle class="cursor-grab select-none opacity-60" aria-hidden="true">&#8942;&#8942;</span>
                         <span class="w-5 text-sm opacity-60">{{ $loop->iteration }}</span>
                         <span class="flex-1">
-                            <span lang="{{ $locale->language }}" class="font-medium">{{ $locale->native_name }}</span>
+                            <span lang="{{ $locale->language }}" class="font-medium">{{ $locale->display_name }}</span>
                             @if ($locale->english_name !== $locale->native_name)
                                 <span class="text-sm opacity-70">{{ $locale->english_name }}</span>
                             @endif
@@ -237,7 +237,7 @@ new #[Layout('components.layouts.app')] class extends Component {
                 <flux:select wire:model="add_locale" :label="__('Add a language')" class="flex-1">
                     <flux:select.option value="">{{ __('Choose a language') }}</flux:select.option>
                     @foreach ($addableLocales as $locale)
-                        <flux:select.option value="{{ $locale->code }}">{{ $locale->native_name }} / {{ $locale->english_name }}</flux:select.option>
+                        <flux:select.option value="{{ $locale->code }}">{{ $locale->display_name }} / {{ $locale->english_name }}</flux:select.option>
                     @endforeach
                 </flux:select>
 

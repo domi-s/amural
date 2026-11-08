@@ -42,3 +42,23 @@ it('can be seeded twice without duplicating rows', function () {
     expect(Locale::count())->toBe(26);
     expect(Country::count())->toBe(31);
 });
+
+it('shows language names with a capital first letter without changing what is stored', function () {
+    $this->seed(LocaleSeeder::class);
+
+    expect(Locale::find('ro-RO')->native_name)->toBe('română');
+    expect(Locale::find('ro-RO')->display_name)->toBe('Română');
+    expect(Locale::find('is-IS')->display_name)->toBe('Íslenska');
+    expect(Locale::find('cs-CZ')->display_name)->toBe('Čeština');
+    expect(Locale::find('bg-BG')->display_name)->toBe('Български');
+    expect(Locale::find('nb-NO')->display_name)->toBe('Norsk bokmål');
+    expect(Locale::find('en-GB')->display_name)->toBe('English');
+});
+
+it('capitalises every language name', function () {
+    $this->seed(LocaleSeeder::class);
+
+    foreach (Locale::all() as $locale) {
+        expect(mb_substr($locale->display_name, 0, 1))->toBe(mb_strtoupper(mb_substr($locale->display_name, 0, 1)));
+    }
+});

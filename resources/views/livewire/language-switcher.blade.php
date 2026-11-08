@@ -9,10 +9,10 @@
         x-on:click="open = ! open"
         x-bind:aria-expanded="open.toString()"
         aria-haspopup="true"
-        aria-label="{{ __('Language') }}: {{ $current?->native_name }}"
+        aria-label="{{ __('Language') }}: {{ $current?->display_name }}"
         class="inline-flex items-center gap-2 border border-marker bg-paper px-3 py-1.5 text-marker hover:bg-marker hover:text-paper focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marker"
     >
-        <span lang="{{ $current?->language }}">{{ $current?->native_name }}</span>
+        <span lang="{{ $current?->language }}">{{ $current?->display_name }}</span>
         <svg aria-hidden="true" viewBox="0 0 12 12" class="size-3" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4.5 6 8.5 10 4.5" /></svg>
     </button>
 
