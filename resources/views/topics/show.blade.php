@@ -32,7 +32,7 @@
                 <x-subject-icon :subject="$concept->subject->icon()" size="size-14" :label="$concept->subject->label()" class="mt-2 hidden sm:block" />
 
                 <div class="min-w-0">
-                    {{-- The display font only for text it can draw correctly; Inter otherwise (see DisplayFont). --}}
+                    {{-- The display font only for text it can draw correctly; the body font otherwise (see DisplayFont). --}}
                     <h1 @if ($lang) lang="{{ $lang }}" @endif class="{{ \App\Support\DisplayFont::classes($page->name()) }} text-4xl leading-[1.08] sm:text-6xl">{{ $page->name() }}</h1>
 
                     @if ($page->altNames !== [])

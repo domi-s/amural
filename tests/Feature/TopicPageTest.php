@@ -98,7 +98,7 @@ it('shows the definition, or says there is none yet', function () {
     $this->get(topicUrl($without, 'decimals'))->assertSee('No definition yet.');
 });
 
-it('writes headings in Latin script in the display font and Greek and Cyrillic ones in Inter', function () {
+it('writes headings in Latin script in the display font and Greek and Cyrillic ones in the body font', function () {
     $latin = pageTopic(['en-GB' => 'Geometry']);
     $greek = pageTopic(['el-GR' => 'Γεωμετρία']);
     $bulgarian = pageTopic(['bg-BG' => 'Геометрия']);

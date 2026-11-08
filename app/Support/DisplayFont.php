@@ -10,7 +10,7 @@ namespace App\Support;
  * and "á" runs into the next letter) and it has no ă, ș or ț at all. Checked against the
  * font file with fontTools: of the accented Latin letters up to U+024F only
  * à ì í ý ÿ š Ë Ù Û Ÿ have a sane width. Text with anything else, and any Greek or
- * Cyrillic, is set in Inter instead, as the spec already says for Greek and Bulgarian.
+ * Cyrillic, is set in the body font (Geologica) instead, as the spec already says for Greek and Bulgarian.
  *
  * If the font is ever replaced by a complete one, widen SUPPORTED here.
  */
@@ -44,7 +44,7 @@ final class DisplayFont
 
     /**
      * The Tailwind classes to set a heading in: the display font when it can draw every
-     * character, otherwise Inter semibold.
+     * character, otherwise the body font, semibold.
      */
     public static function classes(string $text): string
     {

@@ -12,7 +12,7 @@ it('uses the display font for plain Latin text', function (string $text) {
     'a letter the font draws well' => 'Voilà, à la mode',
 ]);
 
-it('uses Inter for text with letters the display font draws wrongly or not at all', function (string $text) {
+it('uses the body font for text with letters the display font draws wrongly or not at all', function (string $text) {
     expect(DisplayFont::supports($text))->toBeFalse();
     expect(DisplayFont::classes($text))->toBe('font-semibold');
 })->with([

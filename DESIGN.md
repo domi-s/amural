@@ -41,9 +41,10 @@ The brand is light-themed: Marker on Paper. Any extra colours are for content an
 - Based on the lettering of old French road signs for hamlets and localities. A chunky serif italic with a magazine voice.
 - Use for the wordmark, headlines, the tagline and pull quotes.
 - Licence: SIL Open Font License 1.1, per OSP's repository README. The font file's metadata carries an older "Hammerfonts, 2000. All rights reserved" line; check this before registering the logo as a trademark.
-- Covers Latin script only, so Greek and Bulgarian headlines fall back to Inter.
-**Text: Inter**
-- Body copy and interface. Covers Latin, Greek and Cyrillic, so every EU language (plus Ukrainian) renders in one family.
+- Covers Latin script only, so Greek and Bulgarian headlines fall back to the body font, Geologica.
+- Caveat found in the font file: nearly every accented letter has wrong spacing (it leaves a gap or runs into the next letter) and ă, ș and ț are missing. The site sets a heading in Philibert only when it can draw every character, and falls back to Geologica semibold otherwise (`App\Support\DisplayFont`). A complete version of the font would remove the fallback.
+**Text: Geologica** (Monokrom, Norway; SIL OFL 1.1)
+- Body copy and interface. A variable font (weight 100 to 900), self-hosted, with Latin, Latin Extended, Greek, Cyrillic and Cyrillic Extended, so every EU language (plus Ukrainian) renders in one family. Its regular weight runs heavy, so body text is set at weight 350 and interface labels at 450.
 **Considered but not chosen:** Crickx / Publi Fluor (OSP: cut-vinyl shop lettering from Brussels) and Daubenton (Velvetyne: a revival of the engraved letters on the façade of the Natural History Museum's evolution gallery in Paris). Both are free under the OFL and could serve as occasional accents.
  
 ## Taglines
