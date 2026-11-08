@@ -1,6 +1,8 @@
 <?php
 
+use App\Actions\Users\CreateUser;
 use App\Models\User;
+use App\Support\LocaleResolver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -29,7 +31,16 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
         $validated['password'] = Hash::make($validated['password']);
 
-        event(new Registered(($user = User::create($validated))));
+        // New users start in the language their browser asks for (or en-GB).
+        $resolver = app(LocaleResolver::class);
+
+        $user = app(CreateUser::class)->execute(
+            $validated,
+            $resolver->interfaceLocale(),
+            [$resolver->contentChain()[0] ?? LocaleResolver::DEFAULT],
+        );
+
+        event(new Registered($user));
 
         Auth::login($user);
 
