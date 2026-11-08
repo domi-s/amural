@@ -14,7 +14,7 @@
         <main class="flex min-h-dvh flex-col items-center justify-center px-4 text-center">
             <x-logo />
             <h1 class="mt-2 font-display text-5xl leading-none italic">{{ config('app.domain') }}</h1>
-            <p class="mt-6 max-w-xl text-sm font-medium leading-relaxed">{{ __('app.description') }}</p>
+            <p class="mt-6 max-w-xl text-sm font-medium leading-relaxed">{{ __('Teachers share, improve and remix lessons in every European language, and credit follows the work.') }}</p>
         </main>
         <footer class="absolute bottom-0 left-1/2 -translate-x-1/2 w-full text-center p-4">
             <p class="font-medium text-sm leading-relaxed">{{ __('An Aspire Education Product. Coming soon :-)') }}</p>

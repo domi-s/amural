@@ -5,6 +5,7 @@ namespace App\Support;
 use App\Models\Locale;
 use App\Models\User;
 use App\Models\UserContentLocale;
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -26,7 +27,13 @@ class LocaleResolver
     /** @var list<string>|null */
     private ?array $chain = null;
 
-    public function __construct(private readonly Request $request) {}
+    private ?int $requestId = null;
+
+    /**
+     * @param  Request|Closure(): Request  $source  The request, or something that returns the
+     *                                              current one (the container swaps requests).
+     */
+    public function __construct(private readonly Request|Closure $source) {}
 
     /**
      * The language of the interface (UI strings), as a locale code.
@@ -47,6 +54,29 @@ class LocaleResolver
     }
 
     /**
+     * The language code Laravel's translator uses for the interface ("ro" for ro-RO), so
+     * __() finds lang/ro.json. Falls back to English.
+     */
+    public function interfaceLanguage(): string
+    {
+        $locale = $this->locales()[$this->interfaceLocale()] ?? null;
+
+        return $locale === null ? 'en' : $locale->language;
+    }
+
+    /**
+     * Remember a valid ?lang= in the session, so the choice sticks on later pages.
+     */
+    public function rememberRequestedLocale(): void
+    {
+        $lang = $this->request()->query('lang');
+
+        if ($this->isValid($lang) && $this->request()->hasSession()) {
+            $this->request()->session()->put(self::SESSION_CONTENT, $lang);
+        }
+    }
+
+    /**
      * Locale codes to try, in order, when choosing which label to show. Always unique and,
      * once locales are seeded, always ends with every locale so something can be shown.
      *
@@ -57,6 +87,8 @@ class LocaleResolver
      */
     public function contentChain(): array
     {
+        $this->request(); // drops cached results if the request has changed
+
         if ($this->chain !== null) {
             return $this->chain;
         }
@@ -68,7 +100,7 @@ class LocaleResolver
             }
         };
 
-        $add($this->request->query('lang'));
+        $add($this->request()->query('lang'));
 
         $user = $this->user();
         if ($user !== null) {
@@ -109,9 +141,25 @@ class LocaleResolver
         $this->locales = null;
     }
 
+    /**
+     * The current request. Cached results belong to one request, so they reset when it changes.
+     */
+    private function request(): Request
+    {
+        $request = $this->source instanceof Closure ? ($this->source)() : $this->source;
+
+        if ($this->requestId !== spl_object_id($request)) {
+            $this->requestId = spl_object_id($request);
+            $this->chain = null;
+            $this->locales = null;
+        }
+
+        return $request;
+    }
+
     private function user(): ?User
     {
-        return $this->request->user();
+        return $this->request()->user();
     }
 
     private function isInterface(mixed $code): bool
@@ -121,7 +169,7 @@ class LocaleResolver
 
     private function sessionValue(string $key): mixed
     {
-        return $this->request->hasSession() ? $this->request->session()->get($key) : null;
+        return $this->request()->hasSession() ? $this->request()->session()->get($key) : null;
     }
 
     /**
@@ -165,7 +213,7 @@ class LocaleResolver
 
         $matches = [];
 
-        foreach ($this->request->getLanguages() as $tag) {
+        foreach ($this->request()->getLanguages() as $tag) {
             $tag = str_replace('_', '-', $tag);
 
             $exact = $candidates->first(fn (Locale $locale) => strcasecmp($locale->code, $tag) === 0);

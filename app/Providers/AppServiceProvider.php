@@ -16,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // One resolver per request, so the language chain is worked out once.
-        $this->app->scoped(LocaleResolver::class, fn ($app) => new LocaleResolver($app['request']));
+        $this->app->scoped(LocaleResolver::class, fn ($app) => new LocaleResolver(fn () => $app['request']));
     }
 
     /**
