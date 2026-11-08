@@ -27,5 +27,6 @@
     "Move up": "Move up",
     "Move down": "Move down",
     "At least one language must remain.": "At least one language must remain.",
-    ":country flag": ":country flag"
+    ":country flag": ":country flag",
+    ":language flag": ":language flag"
 }
