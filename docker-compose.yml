@@ -1,0 +1,15 @@
+services:
+    pgsql:
+        image: postgres:17-alpine
+        restart: unless-stopped
+        environment:
+            POSTGRES_DB: amural
+            POSTGRES_USER: amural
+            POSTGRES_PASSWORD: secret
+        ports:
+            - "5432:5432"
+        volumes:
+            - pgsql-data:/var/lib/postgresql/data
+
+volumes:
+    pgsql-data:
