@@ -92,5 +92,7 @@
     "Image": "Image",
     "File": "File",
     "Worksheet": "Worksheet",
-    "Link": "Link"
+    "Link": "Link",
+    "Reviewed": "Reviewed",
+    "No topics yet.": "No topics yet."
 }

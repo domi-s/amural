@@ -101,6 +101,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `File`
 - `Worksheet`
 - `Link`
+- `Reviewed`
+- `No topics yet.`
 
 ## Romanian (ro) - TODO native check
 
@@ -198,6 +200,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `File`
 - `Worksheet`
 - `Link`
+- `Reviewed`
+- `No topics yet.`
 
 ## Checked
 

@@ -8,10 +8,8 @@
         {{-- Breadcrumb from the "broader" links: the first parent at each level. --}}
         <nav aria-label="{{ __('Breadcrumb') }}" class="text-sm">
             <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
-                @if (Route::has('topics.index'))
-                    <li><a href="{{ route('topics.index') }}" class="underline underline-offset-4">{{ __('Topics') }}</a></li>
-                    <li aria-hidden="true">/</li>
-                @endif
+                <li><a href="{{ route('topics.index') }}" class="underline underline-offset-4">{{ __('Topics') }}</a></li>
+                <li aria-hidden="true">/</li>
                 @foreach ($page->breadcrumb as $crumb)
                     <li><a href="{{ $crumb->url }}" @if ($crumb->langAttribute()) lang="{{ $crumb->langAttribute() }}" @endif class="underline underline-offset-4">{{ $crumb->name }}</a></li>
                     <li aria-hidden="true">/</li>
