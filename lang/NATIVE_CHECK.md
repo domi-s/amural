@@ -78,6 +78,29 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `no name yet — add one`
 - `helpful`
 - `proposed`
+- `Lessons`
+- `Write a lesson on this topic`
+- `No lessons on this topic yet.`
+- `by :author`
+- `Updated :date`
+- `Artifacts`
+- `Attach a video or file`
+- `No videos, files or links yet.`
+- `Nothing in this language yet.`
+- `Filter by language`
+- `All languages`
+- `No language`
+- `Play video: :title`
+- `Sources and credits`
+- `Licence`
+- `History`
+- `Edit`
+- `Topic actions`
+- `Video`
+- `Image`
+- `File`
+- `Worksheet`
+- `Link`
 
 ## Romanian (ro) - TODO native check
 
@@ -152,6 +175,29 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `no name yet — add one`
 - `helpful`
 - `proposed`
+- `Lessons`
+- `Write a lesson on this topic`
+- `No lessons on this topic yet.`
+- `by :author`
+- `Updated :date`
+- `Artifacts`
+- `Attach a video or file`
+- `No videos, files or links yet.`
+- `Nothing in this language yet.`
+- `Filter by language`
+- `All languages`
+- `No language`
+- `Play video: :title`
+- `Sources and credits`
+- `Licence`
+- `History`
+- `Edit`
+- `Topic actions`
+- `Video`
+- `Image`
+- `File`
+- `Worksheet`
+- `Link`
 
 ## Checked
 

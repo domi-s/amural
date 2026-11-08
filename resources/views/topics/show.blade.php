@@ -90,5 +90,25 @@
         <p class="mt-6 text-sm">
             <a href="{{ $page->toggleProposedUrl }}" class="underline underline-offset-4">{{ $page->showProposed ? __('Hide proposed links') : __('Show proposed links') }}</a>
         </p>
+
+        <x-topic-lessons :page="$page" />
+
+        <x-topic-artifacts :page="$page" />
+
+        <x-topic-sources :page="$page" />
+
+        {{-- History and editing arrive with the editor; the links appear once those pages exist. --}}
+        @if (Route::has('topic.history') || (auth()->check() && Route::has('topic.edit')))
+            <nav class="mt-14 flex flex-wrap gap-6 border-t border-marker pt-4 text-sm" aria-label="{{ __('Topic actions') }}">
+                @if (Route::has('topic.history'))
+                    <a href="{{ route('topic.history', ['concept' => $concept->public_id]) }}" class="inline-flex items-center gap-2 underline underline-offset-4"><x-icon name="history" size="size-4" />{{ __('History') }}</a>
+                @endif
+                @auth
+                    @if (Route::has('topic.edit'))
+                        <a href="{{ route('topic.edit', ['concept' => $concept->public_id, 'locale' => $page->shownLocale?->code ?? 'en-GB']) }}" class="inline-flex items-center gap-2 underline underline-offset-4"><x-icon name="pen" size="size-4" />{{ __('Edit') }}</a>
+                    @endif
+                @endauth
+            </nav>
+        @endif
     </article>
 </x-layouts.public>

@@ -20,6 +20,10 @@ final readonly class TopicPage
      * @param  list<TopicLink>  $related  Related and special-case topics.
      * @param  list<LanguageChip>  $languageRow  Launch languages, then the visitor's own.
      * @param  list<LanguageChip>  $moreLanguages  The rest, behind "more languages".
+     * @param  list<LessonGroup>  $lessonGroups  Published lessons by language, the visitor's languages first.
+     * @param  list<ArtifactEntry>  $artifacts  The artifacts left after the language filter.
+     * @param  list<ArtifactFilterOption>  $artifactFilter  Empty unless there is more than one choice.
+     * @param  list<SourceCredit>  $sources
      */
     public function __construct(
         public Concept $concept,
@@ -41,6 +45,11 @@ final readonly class TopicPage
         public int $languageCount,
         public bool $showProposed,
         public string $toggleProposedUrl,
+        public array $lessonGroups,
+        public array $artifacts,
+        public array $artifactFilter,
+        public int $artifactTotal,
+        public array $sources,
     ) {}
 
     /**
@@ -60,6 +69,11 @@ final readonly class TopicPage
         $language = $this->shownLocale?->language;
 
         return $language !== null && $language !== app()->getLocale() ? $language : null;
+    }
+
+    public function lessonCount(): int
+    {
+        return array_sum(array_map(fn (LessonGroup $group) => count($group->lessons), $this->lessonGroups));
     }
 
     public function hasStructure(): bool
