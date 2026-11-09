@@ -12,17 +12,11 @@ final readonly class TopicPage
 {
     /**
      * @param  list<string>  $altNames
-     * @param  list<TopicLink>  $breadcrumb  Ancestors from the top down, following each topic's first parent.
-     * @param  list<TopicLink>  $alsoUnder  Other parents of this topic.
-     * @param  list<TopicLink>  $before  Direct prerequisites, required first.
-     * @param  list<TopicLink>  $leadsTo
-     * @param  list<TopicLink>  $inside
-     * @param  list<TopicLink>  $related  Related and special-case topics.
-     * @param  list<LanguageChip>  $languageRow  Launch languages, then the visitor's own.
-     * @param  list<LanguageChip>  $moreLanguages  The rest, behind "more languages".
-     * @param  list<LessonGroup>  $lessonGroups  Published lessons by language, the visitor's languages first.
-     * @param  list<ArtifactEntry>  $artifacts  The artifacts left after the language filter.
-     * @param  list<ArtifactFilterOption>  $artifactFilter  Empty unless there is more than one choice.
+     * @param  list<TopicLink>  $filedUnder  The chain of broader topics, from the top down.
+     * @param  list<LanguageChip>  $languages  The languages the topic has a name in, in the visitor's order.
+     * @param  list<PathStop>  $path  Empty when the topic has no prerequisites and leads nowhere.
+     * @param  list<TopicLink>  $neighbours  Related, special-case and narrower topics, at most five.
+     * @param  list<LessonEntry>  $lessons  In reading order: the visitor's language first.
      * @param  list<SourceCredit>  $sources
      */
     public function __construct(
@@ -31,23 +25,16 @@ final readonly class TopicPage
         public ?Locale $shownLocale,
         public ?Locale $requestedLocale,
         public array $altNames,
-        public string $stageText,
-        public array $breadcrumb,
-        public array $alsoUnder,
-        public array $before,
-        public array $leadsTo,
-        public array $inside,
-        public array $related,
-        public array $languageRow,
-        public array $moreLanguages,
-        public int $namedCount,
-        public int $reviewedCount,
-        public int $languageCount,
-        public bool $showProposed,
-        public string $toggleProposedUrl,
-        public array $lessonGroups,
-        public array $artifacts,
-        public array $artifactFilter,
+        public string $kicker,
+        public string $ages,
+        public ?TopicLink $issue,
+        public array $filedUnder,
+        public array $languages,
+        public array $path,
+        public array $neighbours,
+        public array $lessons,
+        public LessonStats $stats,
+        public VideoPicks $videos,
         public int $artifactTotal,
         public array $sources,
     ) {}
@@ -71,13 +58,10 @@ final readonly class TopicPage
         return $language !== null && $language !== app()->getLocale() ? $language : null;
     }
 
-    public function lessonCount(): int
+    public function definition(): ?string
     {
-        return array_sum(array_map(fn (LessonGroup $group) => count($group->lessons), $this->lessonGroups));
-    }
+        $definition = $this->label->label?->definition;
 
-    public function hasStructure(): bool
-    {
-        return $this->before !== [] || $this->leadsTo !== [] || $this->inside !== [] || $this->related !== [];
+        return $definition === null || trim($definition) === '' ? null : trim($definition);
     }
 }

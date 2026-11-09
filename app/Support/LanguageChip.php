@@ -5,20 +5,13 @@ namespace App\Support;
 use App\Models\Locale;
 
 /**
- * One chip of the language row: a language and whether the topic has a name in it.
+ * One language in the topic page's margin: a language the topic has a name in.
  */
 final readonly class LanguageChip
 {
-    public const REVIEWED = 'reviewed';
-
-    /** A machine or draft name: shown, but it needs checking. */
-    public const NEEDS_CHECKING = 'needs-checking';
-
-    public const MISSING = 'missing';
-
     public function __construct(
         public Locale $locale,
-        public string $state,
+        public bool $needsChecking,
         public string $url,
         public bool $current,
     ) {}

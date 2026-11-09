@@ -49,7 +49,7 @@ class ShowTopic
         }
 
         return view('topics.show', [
-            'page' => $build->execute($concept, $request->boolean('proposed'), $request->query('artifact_lang') ?: null),
+            'page' => $build->execute($concept),
         ]);
     }
 }

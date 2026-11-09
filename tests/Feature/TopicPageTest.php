@@ -2,7 +2,6 @@
 
 use App\Actions\Concepts\CreateConceptEdge;
 use App\Actions\Concepts\UpdateConceptLabel;
-use App\Actions\Locales\ReplaceContentLocales;
 use App\Enums\ConceptKind;
 use App\Enums\ConceptStatus;
 use App\Enums\EdgeStatus;
@@ -18,6 +17,7 @@ use Database\Seeders\CountrySeeder;
 use Database\Seeders\LocaleSeeder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Route;
 
 beforeEach(function () {
     $this->seed([LocaleSeeder::class, CountrySeeder::class]);
@@ -60,7 +60,7 @@ function topicUrl(Concept $concept, string $slug, string $query = ''): string
     return "/topic/{$concept->public_id}/{$slug}{$query}";
 }
 
-// The header
+// The title block
 
 it('is readable by anyone, without signing in', function () {
     $topic = pageTopic(['en-GB' => 'Adding fractions']);
@@ -68,34 +68,57 @@ it('is readable by anyone, without signing in', function () {
     $this->get(topicUrl($topic, 'adding-fractions'))->assertOk()->assertSee('Adding fractions');
 });
 
-it('shows the name, other names, kind, stage and subject', function () {
+it('opens with a kicker, the title, and the definition under it', function () {
     $topic = pageTopic(
         ['en-GB' => 'Adding fractions'],
         ['kind' => ConceptKind::Procedure, 'stage_from' => Stage::Primary, 'stage_to' => Stage::LowerSecondary],
-        alt: ['fraction addition', 'summing fractions'],
+        definition: 'Combine parts of a whole.',
     );
 
     $this->get(topicUrl($topic, 'adding-fractions'))
         ->assertOk()
-        ->assertSeeInOrder(['<h1', 'Adding fractions', 'Also called', 'fraction addition, summing fractions'], false)
-        ->assertSee('Procedure')
-        ->assertSee('Primary – Lower secondary')
-        ->assertSee('Mathematics')
-        ->assertSeeHtml('aria-label="Mathematics"');
+        ->assertSeeInOrder(['A procedure · Primary to lower secondary', '<h1', 'Adding', 'ombine parts of a whole.'], false);
 });
 
-it('shows a single stage once', function () {
-    $topic = pageTopic(['en-GB' => 'Counting'], ['stage_from' => Stage::EarlyPrimary, 'stage_to' => Stage::EarlyPrimary]);
+it('circles the longest word of five or more letters that is not the first', function () {
+    $topic = pageTopic(['en-GB' => 'Adding unlike fractions']);
 
-    $this->get(topicUrl($topic, 'counting'))->assertSee('Early primary')->assertDontSee('Early primary –');
+    $html = $this->get(topicUrl($topic, 'adding-unlike-fractions'))->content();
+
+    expect($html)->toMatch('/<span class="relative inline-block"><svg[^>]*aria-hidden="true".*?<\/svg>\s*fractions<\/span>/s');
+    expect(substr_count($html, '<span class="relative inline-block">'))->toBe(1);
 });
 
-it('shows the definition, or says there is none yet', function () {
-    $with = pageTopic(['en-GB' => 'Fractions'], definition: 'A number that names part of a whole.');
-    $without = pageTopic(['en-GB' => 'Decimals']);
+it('does not circle anything in a title with no such word', function () {
+    $topic = pageTopic(['en-GB' => 'Pi']);
 
-    $this->get(topicUrl($with, 'fractions'))->assertSee('A number that names part of a whole.');
-    $this->get(topicUrl($without, 'decimals'))->assertSee('No definition yet.');
+    $this->get(topicUrl($topic, 'pi'))->assertDontSee('<span class="relative inline-block">', false);
+});
+
+it('starts the definition with a drop cap in Latin script only', function () {
+    $latin = pageTopic(['en-GB' => 'Fractions'], definition: 'Numbers that name a part of a whole.');
+    $greek = pageTopic(['el-GR' => 'Κλάσματα'], definition: 'Αριθμοί που δείχνουν μέρος του όλου.');
+
+    $this->get(topicUrl($latin, 'fractions'))->assertSee('text-[92px]', false)->assertSee('umbers that name a part of a whole.');
+    $this->get(topicUrl($greek, 'klasmata', '?lang=el-GR'))->assertDontSee('text-[92px]', false)->assertSee('Αριθμοί που δείχνουν μέρος του όλου.');
+});
+
+it('ends the definition with the other names', function () {
+    $topic = pageTopic(['en-GB' => 'Adding fractions'], definition: 'Combine parts.', alt: ['fraction addition', 'summing fractions']);
+
+    $this->get(topicUrl($topic, 'adding-fractions'))
+        ->assertSeeHtml('Also known as <em>fraction addition</em>, <em>summing fractions</em>.');
+});
+
+it('says there is no definition yet, with a link to write one only when the editor exists', function () {
+    $topic = pageTopic(['en-GB' => 'Decimals']);
+
+    $this->get(topicUrl($topic, 'decimals'))->assertSee('No definition yet.')->assertDontSee('Write one');
+
+    Route::get('/topic/{concept}/edit/{locale}', fn () => 'edit')->name('topic.edit');
+    Route::getRoutes()->refreshNameLookups();
+
+    $this->get(topicUrl($topic, 'decimals'))->assertSee('Write one')->assertSee("/topic/{$topic->public_id}/edit/en-GB", false);
 });
 
 it('writes headings in Latin script in the display font and Greek and Cyrillic ones in the body font', function () {
@@ -137,56 +160,93 @@ it('marks text that is in a different language from the page with a lang attribu
     $this->get(topicUrl($topic, 'fractions'))->assertDontSeeHtml('<h1 lang=');
 });
 
-it('has one main heading, a skip link, and labelled navigation', function () {
+it('has one main heading, a skip link and a header without a language switcher or rules', function () {
     $topic = pageTopic(['en-GB' => 'Fractions']);
+
+    $response = $this->get(topicUrl($topic, 'fractions'));
+    $html = $response->content();
+
+    expect(substr_count($html, '<h1'))->toBe(1);
+    expect($html)->toContain('href="#content"')->not->toContain('aria-label="Breadcrumb"')->not->toContain('border-b border-marker');
+    $response->assertDontSeeLivewire(App\Livewire\LanguageSwitcher::class);
+    // No flags on this page: language is a quiet setting in the margin.
+    expect($html)->not->toContain('flag"');
+});
+
+// The margin: reading in
+
+it('lists only the languages the topic has a name in, in the visitor\'s order, with the current one pressed', function () {
+    $topic = pageTopic(['en-GB' => 'Fractions', 'ro-RO' => 'Fracții', 'de-DE' => 'Brüche']);
+
+    $html = $this->get(topicUrl($topic, 'fractii', '?lang=ro-RO'))->content();
+    $margin = substr($html, strpos($html, 'id="reading-in"'), 2500);
+
+    expect($margin)->toMatch('/aria-pressed="true"[^>]*>\s*Română|Română.*aria-pressed/s');
+    expect(strpos($margin, 'Română'))->toBeLessThan(strpos($margin, 'English'));
+    expect($margin)->not->toContain('Español')->not->toContain('Polski');
+    expect(substr_count($margin, 'aria-pressed="true"'))->toBe(1);
+    expect(substr_count($margin, '<button'))->toBe(3);
+});
+
+it('makes each language a button that sends ?lang= to the right slug', function () {
+    $topic = pageTopic(['en-GB' => 'Fractions', 'ro-RO' => 'Fracții']);
 
     $html = $this->get(topicUrl($topic, 'fractions'))->content();
 
-    expect(substr_count($html, '<h1'))->toBe(1);
-    expect($html)->toContain('href="#content"')->toContain('aria-label="Breadcrumb"');
+    expect($html)->toContain('formaction="'.url("/topic/{$topic->public_id}/fractii").'"')
+        ->toContain('name="lang"')
+        ->toContain('value="ro-RO"')
+        ->toContain('lang="ro"');
 });
 
-it('has the language switcher in its header', function () {
-    $topic = pageTopic(['en-GB' => 'Fractions']);
+it('keeps a draft or machine name marked as needing checking, and nothing else', function () {
+    $topic = pageTopic([
+        'en-GB' => 'Fractions',
+        'es-ES' => ['Fracciones', LabelStatus::Draft],
+        'ro-RO' => ['Fracții', LabelStatus::Machine],
+    ]);
 
-    $this->get(topicUrl($topic, 'fractions'))->assertSeeLivewire(App\Livewire\LanguageSwitcher::class);
+    $html = $this->get(topicUrl($topic, 'fractions'))->content();
+
+    expect(substr_count($html, '(needs checking)'))->toBe(2);
 });
 
-// Fallback
-
-it('says when the name is not yet in the visitor\'s language', function () {
+it('says when the name is not yet in the visitor\'s language, and offers a translation only when the editor exists', function () {
     $topic = pageTopic(['en-GB' => 'Fractions']);
 
-    $this->get(topicUrl($topic, 'fractions', '?lang=ro-RO'))
-        ->assertSee('Not yet in Română · shown in English');
+    $this->get(topicUrl($topic, 'fractions', '?lang=ro-RO'))->assertSee('Not in Română yet.')->assertDontSee('+ translate it');
+
+    Route::get('/topic/{concept}/edit/{locale}', fn () => 'edit')->name('topic.edit');
+    Route::getRoutes()->refreshNameLookups();
+
+    $this->get(topicUrl($topic, 'fractions', '?lang=ro-RO'))->assertSee('+ translate it')->assertSee("/topic/{$topic->public_id}/edit/ro-RO", false);
 });
 
 it('does not say that when the name is in the first-choice language', function () {
     $topic = pageTopic(['en-GB' => 'Fractions', 'ro-RO' => 'Fracții']);
 
-    $this->get(topicUrl($topic, 'fractii', '?lang=ro-RO'))->assertDontSee('Not yet in');
+    $this->get(topicUrl($topic, 'fractii', '?lang=ro-RO'))->assertDontSee('Not in');
 });
 
-// Breadcrumb
+// The margin: filed under
 
-it('shows a breadcrumb from the first parent at each level, and other parents as also under', function () {
+it('files the topic under its subject, its chain of broader topics and the ages it is for', function () {
     $number = pageTopic(['en-GB' => 'Number']);
     $fractions = pageTopic(['en-GB' => 'Fractions']);
-    $adding = pageTopic(['en-GB' => 'Adding fractions']);
-    $algebra = pageTopic(['en-GB' => 'Algebra']);
+    $adding = pageTopic(['en-GB' => 'Adding fractions'], ['stage_from' => Stage::Primary, 'stage_to' => Stage::LowerSecondary]);
 
     pageEdge($fractions, $number, EdgeType::Broader);
     pageEdge($adding, $fractions, EdgeType::Broader);
-    pageEdge($adding, $algebra, EdgeType::Broader);
 
     $html = $this->get(topicUrl($adding, 'adding-fractions'))->content();
 
-    expect($html)->toMatch('/Number<\/a>.*Fractions<\/a>.*aria-current="page"/s');
-    expect($html)->toContain('Also under');
-    expect($html)->toMatch('/Also under:.*Algebra/s');
+    expect($html)->toContain('Filed under')->toContain('Mathematics')->toContain('Ages 7 to 14');
+    expect($html)->toMatch('/Mathematics.*>Number<\/a>,\s*<a[^>]*>Fractions<\/a>.*Ages 7 to 14/s');
+    // The first parent is the "issue" in the header.
+    expect($html)->toMatch('/Issue:\s*<a[^>]*>Fractions<\/a>/s');
 });
 
-it('stops a breadcrumb that loops', function () {
+it('stops following broader topics round a loop', function () {
     $a = pageTopic(['en-GB' => 'Topic A']);
     $b = pageTopic(['en-GB' => 'Topic B']);
     pageEdge($a, $b, EdgeType::Broader);
@@ -195,26 +255,42 @@ it('stops a breadcrumb that loops', function () {
     $this->get(topicUrl($a, 'topic-a'))->assertOk();
 });
 
-// Structure
+it('shows stages without ages in words', function () {
+    $topic = pageTopic(['en-GB' => 'Topology'], ['stage_from' => Stage::Undergraduate, 'stage_to' => Stage::Graduate]);
 
-it('lists prerequisites with the required ones first, and what this topic leads to', function () {
+    $this->get(topicUrl($topic, 'topology'))->assertSee('Undergraduate to graduate');
+});
+
+// The path
+
+it('draws the path from prerequisites through this topic to what it leads to, required first', function () {
     $topic = pageTopic(['en-GB' => 'Adding fractions']);
     $equivalent = pageTopic(['en-GB' => 'Equivalent fractions']);
-    $helpfulOne = pageTopic(['en-GB' => 'Adding whole numbers']);
+    $helpful = pageTopic(['en-GB' => 'Adding whole numbers']);
     $zebra = pageTopic(['en-GB' => 'Zebra prerequisite']);
     $next = pageTopic(['en-GB' => 'Subtracting fractions']);
 
-    pageEdge($helpfulOne, $topic, EdgeType::Prerequisite, strength: EdgeStrength::Helpful);
+    pageEdge($helpful, $topic, EdgeType::Prerequisite, strength: EdgeStrength::Helpful);
     pageEdge($zebra, $topic, EdgeType::Prerequisite, strength: EdgeStrength::Required);
     pageEdge($equivalent, $topic, EdgeType::Prerequisite, strength: EdgeStrength::Required);
     pageEdge($topic, $next, EdgeType::Prerequisite);
 
-    $this->get(topicUrl($topic, 'adding-fractions'))
-        ->assertSeeInOrder(['Before this', 'Equivalent fractions', 'Zebra prerequisite', 'Adding whole numbers', 'Leads to', 'Subtracting fractions'])
-        ->assertSee('helpful');
+    $html = $this->get(topicUrl($topic, 'adding-fractions'))->content();
+
+    // At most two on each side: the two required ones, then this topic, then what it leads to.
+    expect($html)->toMatch('/First.*Equivalent fractions.*First.*Zebra prerequisite.*You are here.*Adding fractions.*Then.*Subtracting fractions/s');
+    expect($html)->not->toContain('Adding whole numbers</a>');
+    expect($html)->toContain('<ol class="relative');
+    expect($html)->toContain('aria-current="location"');
 });
 
-it('lists narrower topics inside, and related and special-case topics together', function () {
+it('hides the path when the topic has no prerequisites and leads nowhere', function () {
+    $topic = pageTopic(['en-GB' => 'Counting']);
+
+    $this->get(topicUrl($topic, 'counting'))->assertDontSee('You are here')->assertDontSee('Next door');
+});
+
+it('puts related, special-case and narrower topics in one sentence, at most five', function () {
     $topic = pageTopic(['en-GB' => 'Quadrilaterals']);
     $square = pageTopic(['en-GB' => 'Square']);
     $rectangle = pageTopic(['en-GB' => 'Rectangle']);
@@ -223,16 +299,25 @@ it('lists narrower topics inside, and related and special-case topics together',
 
     pageEdge($square, $topic, EdgeType::Broader);
     pageEdge($rectangle, $topic, EdgeType::Broader);
-    pageEdge($topic, $polygon, EdgeType::SpecialCase);   // quadrilaterals are a special case of polygons
-    pageEdge($square, $topic, EdgeType::SpecialCase);    // a square is a special case of quadrilaterals
+    pageEdge($topic, $polygon, EdgeType::SpecialCase);
+    pageEdge($square, $topic, EdgeType::SpecialCase);
     pageEdge($topic, $perimeter, EdgeType::Related);
 
     $html = $this->get(topicUrl($topic, 'quadrilaterals'))->content();
 
-    expect($html)->toMatch('/Inside this.*Rectangle.*Square/s');
-    expect($html)->toMatch('/Related.*Perimeter.*Polygon.*Square/s');
-    // A topic that is both inside and a special case is listed once in each list, not twice in one.
-    expect(substr_count($html, '>Square</a>'))->toBe(2);
+    expect($html)->toMatch('/Next door:.*Perimeter.*Polygon.*Square.*and\s*<a[^>]*>Rectangle<\/a>\./s');
+    // Square is both narrower and a special case, and is listed once.
+    expect(substr_count($html, '>Square</a>'))->toBe(1);
+    expect($html)->not->toContain('Before this')->not->toContain('Show proposed links');
+
+    foreach (range(1, 8) as $i) {
+        pageEdge($topic, pageTopic(['en-GB' => "Extra {$i}"]), EdgeType::Related);
+    }
+
+    $html = $this->get(topicUrl($topic, 'quadrilaterals'))->content();
+    $sentence = substr($html, strpos($html, 'Next door:'), strpos($html, '</p>', strpos($html, 'Next door:')) - strpos($html, 'Next door:'));
+
+    expect(substr_count($sentence, '<a '))->toBe(5);
 });
 
 it('links to each topic at its canonical URL in the visitor\'s language', function () {
@@ -245,7 +330,7 @@ it('links to each topic at its canonical URL in the visitor\'s language', functi
         ->assertSee('Adunarea fracțiilor');
 });
 
-it('shows only reviewed links unless proposed ones are asked for', function () {
+it('shows only reviewed links, with no way to ask for the proposed ones', function () {
     $topic = pageTopic(['en-GB' => 'Fractions']);
     $reviewed = pageTopic(['en-GB' => 'Reviewed neighbour']);
     $proposed = pageTopic(['en-GB' => 'Proposed neighbour']);
@@ -255,19 +340,13 @@ it('shows only reviewed links unless proposed ones are asked for', function () {
     pageEdge($proposed, $topic, EdgeType::Broader, EdgeStatus::MachineProposed);
     pageEdge($rejected, $topic, EdgeType::Broader, EdgeStatus::Rejected);
 
-    $this->get(topicUrl($topic, 'fractions'))
-        ->assertSee('Reviewed neighbour')
-        ->assertDontSee('Proposed neighbour')
-        ->assertDontSee('Rejected neighbour')
-        ->assertSee('Show proposed links')
-        ->assertSee('?proposed=1', false);
-
-    $this->get(topicUrl($topic, 'fractions', '?proposed=1'))
-        ->assertSee('Reviewed neighbour')
-        ->assertSee('Proposed neighbour')
-        ->assertDontSee('Rejected neighbour')
-        ->assertSee('Hide proposed links')
-        ->assertSeeHtml('border-dashed border-marker');
+    foreach (['', '?proposed=1'] as $query) {
+        $this->get(topicUrl($topic, 'fractions', $query))
+            ->assertSee('Reviewed neighbour')
+            ->assertDontSee('Proposed neighbour')
+            ->assertDontSee('Rejected neighbour')
+            ->assertDontSee('proposed links');
+    }
 });
 
 it('leaves out neighbours that have been deprecated', function () {
@@ -276,70 +355,6 @@ it('leaves out neighbours that have been deprecated', function () {
     pageEdge($gone, $topic, EdgeType::Broader);
 
     $this->get(topicUrl($topic, 'fractions'))->assertDontSee('Retired neighbour');
-});
-
-// The language row
-
-it('shows the launch languages first, then the visitor\'s own, with the rest behind more languages', function () {
-    $topic = pageTopic(['en-GB' => 'Fractions']);
-    $user = UserFactory::new()->create();
-    app(ReplaceContentLocales::class)->execute($user, ['de-DE', 'en-GB']);
-
-    $html = $this->actingAs($user)->get(topicUrl($topic, 'fractions'))->content();
-
-    $row = substr($html, strpos($html, 'language-row-heading'));
-    $moreAt = strpos($row, 'x-show="more"');
-
-    // Launch languages (English, Romanian, Spanish), then the user's German, then the rest.
-    expect(strpos($row, 'aria-label="English flag"'))->toBeLessThan(strpos($row, 'aria-label="Romanian flag"'));
-    expect(strpos($row, 'aria-label="Spanish flag"'))->toBeLessThan(strpos($row, 'aria-label="German flag"'));
-    expect(strpos($row, 'aria-label="German flag"'))->toBeLessThan($moreAt);
-    expect(strpos($row, 'aria-label="Bulgarian flag"'))->toBeGreaterThan($moreAt);
-    expect($row)->toContain('More languages');
-});
-
-it('shows reviewed, needs-checking and missing languages differently, and counts them', function () {
-    $topic = pageTopic([
-        'en-GB' => 'Fractions',
-        'es-ES' => ['Fracciones', LabelStatus::Draft],
-        'ro-RO' => ['Fracții', LabelStatus::Machine],
-    ]);
-
-    $html = $this->get(topicUrl($topic, 'fractions'))->content();
-
-    expect($html)->toContain('3 of 26 languages · 1 reviewed');
-    // Draft and machine names need checking; the other 23 languages have no name yet.
-    expect(substr_count($html, 'title="needs checking"'))->toBe(2);
-    expect(substr_count($html, 'title="no name yet — add one"'))->toBeGreaterThan(20);
-});
-
-it('links each chip to the topic in that language with the right slug', function () {
-    $topic = pageTopic(['en-GB' => 'Fractions', 'ro-RO' => 'Fracții']);
-
-    $this->get(topicUrl($topic, 'fractions'))
-        ->assertSee("/topic/{$topic->public_id}/fractii?lang=ro-RO", false)
-        ->assertSee("/topic/{$topic->public_id}/fractions?lang=en-GB", false)
-        // A language with no name keeps the current slug and just asks for that language.
-        ->assertSee("/topic/{$topic->public_id}/fractions?lang=de-DE", false);
-});
-
-it('marks the language being shown', function () {
-    $topic = pageTopic(['en-GB' => 'Fractions', 'ro-RO' => 'Fracții']);
-
-    $html = $this->get(topicUrl($topic, 'fractii', '?lang=ro-RO'))->content();
-
-    // Only the language row (the header switcher has its own marker).
-    $row = substr($html, strpos($html, 'language-row-heading'));
-
-    expect(substr_count($row, 'aria-current="true"'))->toBe(1);
-    expect($row)->toMatch('/href="[^"]*lang=ro-RO"[^>]*aria-current="true"/s');
-});
-
-it('keeps the proposed toggle when moving between languages', function () {
-    $topic = pageTopic(['en-GB' => 'Fractions', 'ro-RO' => 'Fracții']);
-
-    $this->get(topicUrl($topic, 'fractions', '?proposed=1'))
-        ->assertSee("fractii?lang=ro-RO&amp;proposed=1", false);
 });
 
 // Queries: a fixed number however many neighbours the topic has.

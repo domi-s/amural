@@ -31,49 +31,73 @@ class BuildTopicPage
         private readonly TopicResolver $urls,
     ) {}
 
-    public function execute(Concept $concept, bool $showProposed = false, ?string $artifactLanguage = null): TopicPage
+    public function execute(Concept $concept): TopicPage
     {
         $concept->loadMissing('labels');
 
-        $statuses = $showProposed
-            ? [EdgeStatus::Reviewed->value, EdgeStatus::MachineProposed->value]
-            : [EdgeStatus::Reviewed->value];
+        $statuses = [EdgeStatus::Reviewed->value];
 
         $allLocales = Locale::query()->orderByDesc('is_launch')->orderBy('sort')->get();
         $label = $concept->label($this->locales);
+        $shown = $allLocales->firstWhere('code', $label->shownLocale());
 
         $edges = $this->edges($concept, $statuses);
         $parents = $this->parents($edges, $concept);
+        $before = $this->links($edges, EdgeType::Prerequisite, fromThis: false, concept: $concept);
+        $leadsTo = $this->links($edges, EdgeType::Prerequisite, fromThis: true, concept: $concept);
 
-        [$row, $more] = $this->languageRows($concept, $allLocales, $showProposed);
-        [$artifacts, $artifactFilter, $artifactTotal] = $this->artifacts($concept, $allLocales, $artifactLanguage, $showProposed);
+        $localeOrder = array_values(array_unique([$this->locales->contentChain()[0] ?? LocaleResolver::DEFAULT, ...$this->locales->preferredLocales()]));
+        [$lessons, $stats] = $this->lessons($concept, $allLocales, $localeOrder);
+        [$videos, $artifactTotal] = $this->artifacts($concept, $allLocales, $localeOrder);
+
+        $name = $label->label->pref ?? __('Untitled topic');
+        $language = $shown?->language;
 
         return new TopicPage(
             concept: $concept,
             label: $label,
-            shownLocale: $allLocales->firstWhere('code', $label->shownLocale()),
+            shownLocale: $shown,
             requestedLocale: $allLocales->firstWhere('code', $label->requestedLocale),
             altNames: $label->label->alt ?? [],
-            stageText: $this->stageText($concept),
-            breadcrumb: $this->breadcrumb($parents[0] ?? null, $statuses),
-            alsoUnder: array_slice($parents, 1),
-            before: $this->links($edges, EdgeType::Prerequisite, fromThis: false, concept: $concept),
-            leadsTo: $this->links($edges, EdgeType::Prerequisite, fromThis: true, concept: $concept),
-            inside: $this->links($edges, EdgeType::Broader, fromThis: false, concept: $concept),
-            related: $this->related($edges, $concept),
-            languageRow: $row,
-            moreLanguages: $more,
-            namedCount: $concept->labels->count(),
-            reviewedCount: $concept->labels->where('status', LabelStatus::Reviewed)->count(),
-            languageCount: $allLocales->count(),
-            showProposed: $showProposed,
-            toggleProposedUrl: $this->urls->canonicalUrl($concept, $showProposed ? [] : ['proposed' => 1]),
-            lessonGroups: $this->lessonGroups($concept, $allLocales),
-            artifacts: $artifacts,
-            artifactFilter: $artifactFilter,
+            kicker: $concept->kind->withArticle().' · '.TopicPageData::stageKicker($concept->stage_from, $concept->stage_to),
+            ages: TopicPageData::stageAges($concept->stage_from, $concept->stage_to),
+            issue: $parents[0] ?? null,
+            filedUnder: $this->breadcrumb($parents[0] ?? null, $statuses),
+            languages: $this->languages($concept, $allLocales),
+            path: TopicPageData::pathStops($before, $name, $language !== null && $language !== app()->getLocale() ? $language : null, $leadsTo),
+            neighbours: $this->neighbours($edges, $concept),
+            lessons: $lessons,
+            stats: $stats,
+            videos: $videos,
             artifactTotal: $artifactTotal,
             sources: $this->sources($concept),
         );
+    }
+
+    /**
+     * "Next door": related, special-case and narrower topics, once each, at most five.
+     *
+     * @param  Collection<int, ConceptEdge>  $edges
+     * @return list<TopicLink>
+     */
+    private function neighbours(Collection $edges, Concept $concept): array
+    {
+        $links = array_merge(
+            $this->related($edges, $concept),
+            $this->links($edges, EdgeType::Broader, fromThis: false, concept: $concept),
+        );
+
+        $seen = [];
+        $unique = [];
+
+        foreach ($links as $link) {
+            if (! isset($seen[$link->concept->id])) {
+                $seen[$link->concept->id] = true;
+                $unique[] = $link;
+            }
+        }
+
+        return array_slice($unique, 0, TopicPageData::MAX_NEIGHBOURS);
     }
 
     /**
@@ -218,58 +242,62 @@ class BuildTopicPage
     }
 
     /**
-     * Published lessons on the topic, by language: the visitor's own languages first, then
-     * launch languages, then the rest.
+     * Published lessons on the topic in reading order, and the counts for the sentence above them.
      *
      * @param  Collection<int, Locale>  $allLocales
-     * @return list<LessonGroup>
+     * @param  list<string>  $localeOrder
+     * @return array{0: list<LessonEntry>, 1: LessonStats}
      */
-    private function lessonGroups(Concept $concept, Collection $allLocales): array
+    private function lessons(Concept $concept, Collection $allLocales, array $localeOrder): array
     {
         $lessons = $concept->lessons()
             ->where('lessons.status', LessonStatus::Published->value)
             ->with(['owner', 'headRevision'])
+            ->withCount('revisions')
             ->get();
 
-        $position = $allLocales->pluck('code')->flip();
-        $preferred = array_flip($this->locales->preferredLocales());
+        $entries = [];
 
-        return $lessons
-            ->groupBy('locale_code')
-            ->map(function (Collection $group, string $code) use ($allLocales) {
-                $locale = $allLocales->firstWhere('code', $code);
+        foreach ($lessons as $lesson) {
+            $locale = $allLocales->firstWhere('code', $lesson->locale_code);
 
-                return $locale === null ? null : new LessonGroup(
-                    locale: $locale,
-                    lessons: $group
-                        ->map(fn (Lesson $lesson) => new LessonEntry(
-                            title: $lesson->title,
-                            url: Route::has('lessons.show')
-                                ? route('lessons.show', array_filter(['lesson' => $lesson->public_id, 'slug' => $lesson->slug]))
-                                : null,
-                            author: $lesson->owner->name,
-                            updatedAt: $lesson->headRevision->created_at ?? $lesson->updated_at,
-                        ))
-                        ->sortByDesc(fn (LessonEntry $entry) => $entry->updatedAt?->getTimestamp() ?? 0)
-                        ->values()
-                        ->all(),
-                );
-            })
-            ->filter()
-            ->sortBy(fn (LessonGroup $group) => [$preferred[$group->locale->code] ?? PHP_INT_MAX, $position[$group->locale->code] ?? PHP_INT_MAX])
-            ->values()
-            ->all();
+            if ($locale === null) {
+                continue;
+            }
+
+            $entries[] = new LessonEntry(
+                title: $lesson->title,
+                url: Route::has('lessons.show')
+                    ? route('lessons.show', array_filter(['lesson' => $lesson->public_id, 'slug' => $lesson->slug]))
+                    : null,
+                author: $lesson->owner->name,
+                authorId: $lesson->owner_id,
+                locale: $locale,
+                versions: max(1, (int) $lesson->revisions_count),
+                primary: (bool) $lesson->getRelation('pivot')->getAttribute('is_primary'),
+                updatedAt: $lesson->headRevision->created_at ?? $lesson->updated_at,
+            );
+        }
+
+        $stats = new LessonStats(
+            lessons: count($entries),
+            teachers: count(array_unique(array_map(fn (LessonEntry $entry) => $entry->authorId, $entries))),
+            languages: count(array_unique(array_map(fn (LessonEntry $entry) => $entry->locale->code, $entries))),
+        );
+
+        return [TopicPageData::orderLessons($entries, $localeOrder), $stats];
     }
 
     /**
-     * The artifacts on the topic, narrowed by the language filter.
+     * The topic's videos, files and links, split into the featured video, the second one and the rest.
      *
      * @param  Collection<int, Locale>  $allLocales
-     * @return array{0: list<ArtifactEntry>, 1: list<ArtifactFilterOption>, 2: int}
+     * @param  list<string>  $localeOrder
+     * @return array{0: VideoPicks, 1: int}
      */
-    private function artifacts(Concept $concept, Collection $allLocales, ?string $filter, bool $showProposed): array
+    private function artifacts(Concept $concept, Collection $allLocales, array $localeOrder): array
     {
-        $entries = $concept->artifacts()->get()->map(function (Artifact $artifact) use ($allLocales) {
+        $entries = $concept->artifacts()->with('owner')->get()->map(function (Artifact $artifact) use ($allLocales) {
             $host = $artifact->url === null ? null : parse_url($artifact->url, PHP_URL_HOST);
 
             return new ArtifactEntry(
@@ -277,50 +305,9 @@ class BuildTopicPage
                 locale: $artifact->locale_code === null ? null : $allLocales->firstWhere('code', $artifact->locale_code),
                 host: is_string($host) ? preg_replace('/^www\./', '', $host) : null,
             );
-        });
+        })->values()->all();
 
-        $total = $entries->count();
-
-        // The languages present, in the language row's order, plus "no language" if any.
-        $present = $allLocales->filter(fn (Locale $locale) => $entries->contains(fn (ArtifactEntry $e) => $e->locale?->code === $locale->code));
-        $hasNeutral = $entries->contains(fn (ArtifactEntry $e) => $e->locale === null);
-
-        $valid = array_merge(
-            [ArtifactFilterOption::ALL],
-            $present->pluck('code')->all(),
-            $hasNeutral ? [ArtifactFilterOption::NEUTRAL] : [],
-        );
-        $active = in_array($filter, $valid, true) ? $filter : ArtifactFilterOption::ALL;
-
-        $url = fn (string $key) => $this->urls->canonicalUrl($concept, array_filter([
-            'proposed' => $showProposed ? 1 : null,
-            'artifact_lang' => $key === ArtifactFilterOption::ALL ? null : $key,
-        ]));
-
-        $options = [];
-
-        // A filter only helps when there is something to choose between.
-        if (count($valid) > 2) {
-            $options[] = new ArtifactFilterOption(ArtifactFilterOption::ALL, null, $total, $url(ArtifactFilterOption::ALL), $active === ArtifactFilterOption::ALL);
-
-            foreach ($present as $locale) {
-                $count = $entries->filter(fn (ArtifactEntry $e) => $e->locale?->code === $locale->code)->count();
-                $options[] = new ArtifactFilterOption($locale->code, $locale, $count, $url($locale->code), $active === $locale->code);
-            }
-
-            if ($hasNeutral) {
-                $count = $entries->filter(fn (ArtifactEntry $e) => $e->locale === null)->count();
-                $options[] = new ArtifactFilterOption(ArtifactFilterOption::NEUTRAL, null, $count, $url(ArtifactFilterOption::NEUTRAL), $active === ArtifactFilterOption::NEUTRAL);
-            }
-        }
-
-        $shown = match ($active) {
-            ArtifactFilterOption::ALL => $entries,
-            ArtifactFilterOption::NEUTRAL => $entries->filter(fn (ArtifactEntry $e) => $e->locale === null),
-            default => $entries->filter(fn (ArtifactEntry $e) => $e->locale?->code === $active),
-        };
-
-        return [$shown->values()->all(), $options, $total];
+        return [TopicPageData::pickVideos($entries, $localeOrder), count($entries)];
     }
 
     /**
@@ -343,58 +330,35 @@ class BuildTopicPage
             ->all();
     }
 
-    private function stageText(Concept $concept): string
-    {
-        return $concept->stage_from === $concept->stage_to
-            ? $concept->stage_from->label()
-            : $concept->stage_from->label().' – '.$concept->stage_to->label();
-    }
-
     /**
-     * The language row: launch languages first, then the visitor's own, then the rest behind
-     * "more languages".
+     * The languages the topic has a name in, in the visitor's order. Each links to the topic in
+     * that language; the page form sends ?lang= from the button.
      *
      * @param  Collection<int, Locale>  $allLocales
-     * @return array{0: list<LanguageChip>, 1: list<LanguageChip>}
+     * @return list<LanguageChip>
      */
-    private function languageRows(Concept $concept, Collection $allLocales, bool $showProposed): array
+    private function languages(Concept $concept, Collection $allLocales): array
     {
         $labels = $concept->labels->keyBy('locale_code');
-        $currentSlug = $this->urls->slugFor($concept);
         $current = $concept->label($this->locales)->shownLocale();
-        $preferred = $this->locales->preferredLocales();
+        $chips = [];
 
-        $chip = function (Locale $locale) use ($concept, $labels, $currentSlug, $current, $showProposed): LanguageChip {
-            $label = $labels->get($locale->code);
+        foreach ($this->locales->contentChain() as $code) {
+            $label = $labels->get($code);
+            $locale = $allLocales->firstWhere('code', $code);
 
-            $state = match (true) {
-                $label === null => LanguageChip::MISSING,
-                $label->status === LabelStatus::Reviewed => LanguageChip::REVIEWED,
-                default => LanguageChip::NEEDS_CHECKING,
-            };
+            if ($label === null || $locale === null) {
+                continue;
+            }
 
-            $query = ['lang' => $locale->code] + ($showProposed ? ['proposed' => 1] : []);
-
-            return new LanguageChip(
+            $chips[] = new LanguageChip(
                 locale: $locale,
-                state: $state,
-                url: $this->urls->urlWithSlug($concept, $label?->slug ?: $currentSlug, $query),
-                current: $locale->code === $current,
+                needsChecking: $label->status !== LabelStatus::Reviewed,
+                url: $this->urls->urlWithSlug($concept, $label->slug ?: $this->urls->slugFor($concept)),
+                current: $code === $current,
             );
-        };
+        }
 
-        $launch = $allLocales->where('is_launch', true);
-        $own = $allLocales
-            ->where('is_launch', false)
-            ->filter(fn (Locale $locale) => in_array($locale->code, $preferred, true))
-            ->sortBy(fn (Locale $locale) => array_search($locale->code, $preferred, true));
-        $rest = $allLocales
-            ->where('is_launch', false)
-            ->reject(fn (Locale $locale) => in_array($locale->code, $preferred, true));
-
-        return [
-            $launch->merge($own)->map($chip)->values()->all(),
-            $rest->map($chip)->values()->all(),
-        ];
+        return $chips;
     }
 }

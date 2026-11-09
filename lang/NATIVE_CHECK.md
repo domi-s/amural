@@ -112,6 +112,92 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Shaded: where :language is spoken`
 - `No language of this country is available yet.`
 - `Other languages spoken here are not available yet.`
+- `A definition`
+- `A concept`
+- `A procedure`
+- `A result`
+- `A representation`
+- `An application`
+- `:from to :to`
+- `Ages :from to :to`
+- `stage.early_primary.from`
+- `stage.early_primary.to`
+- `stage.primary.from`
+- `stage.primary.to`
+- `stage.lower_secondary.from`
+- `stage.lower_secondary.to`
+- `stage.upper_secondary.from`
+- `stage.upper_secondary.to`
+- `Issue`
+- `Reading in`
+- `Not in :language yet.`
+- `(needs checking)`
+- `+ translate it`
+- `Filed under`
+- `Edit this topic`
+- `First`
+- `You are here`
+- `Then`
+- `Where this topic sits`
+- `Next door`
+- `and`
+- `Also known as :names.`
+- `Write one`
+- `In this issue`
+- `{1} :count lesson|[2,*] :count lessons`
+- `{1} :count teacher|[2,*] :count teachers`
+- `{1} :count language|[2,*] :count languages`
+- `{1} :count version|[2,*] :count versions`
+- `:lessons, by :teachers, in :languages. Take one, change it, make it yours.`
+- `Write the next one`
+- `Nobody has written this one yet.`
+- `All :count lessons`
+- `To watch`
+- `Also`
+- `Add yours`
+- `Got a video or worksheet for this?`
+- `Add it`
+- `Sources`
+- `About this topic`
+- `What would you like to learn today, :name?`
+- `What are we working on, :name?`
+- `Stuck on something, :name?`
+- `Where shall we start, :name?`
+- `What would you like to learn today?`
+- `What are we working on?`
+- `Stuck on something?`
+- `Where shall we start?`
+- `Find a lesson`
+- `Find exercises`
+- `Guide me`
+- `What do you need to teach or learn? For example: adding fractions with unlike denominators, ages 10 to 12`
+- `What do you want to practise? For example: 15 questions on solving linear equations`
+- `Tell us the problem you're stuck on, and what you've tried so far.`
+- `We search the lessons teachers have shared and show you the best ones, in your language.`
+- `We find exercises at the right level, and can put a set together for you.`
+- `Hints, not answers. We ask questions and point the way, so you work it out yourself.`
+- `Adding fractions with different denominators`
+- `How plants make food, ages 9 to 11`
+- `The causes of the First World War`
+- `Solving linear equations, easy to hard`
+- `Past tense verbs, ten questions`
+- `Reading a bar chart`
+- `I don't get why you flip the second fraction when dividing`
+- `I solved 3x + 5 = 20 and got x = 8`
+- `How do I start an essay on the French Revolution?`
+- `How can we help?`
+- `Ask the tutor`
+- `Send`
+- `Try`
+- `The tutor isn't open yet, but this is where you'll ask. Meanwhile, browse the topics below.`
+- `:provider is a US company, and this video isn't hosted on European servers. Playing it shares your IP address and device details with them.`
+- `Got it, don't show this again`
+- `Edited by teachers`
+- `Ask questions, get answers and exercise what you've learned`
+- `Follow all exercises and animations for the most effective learning`
+- `Doesn't solve it for you`
+- `Yes`
+- `No`
 
 ## Romanian (ro) - TODO native check
 
@@ -220,6 +306,92 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Shaded: where :language is spoken`
 - `No language of this country is available yet.`
 - `Other languages spoken here are not available yet.`
+- `A definition`
+- `A concept`
+- `A procedure`
+- `A result`
+- `A representation`
+- `An application`
+- `:from to :to`
+- `Ages :from to :to`
+- `stage.early_primary.from`
+- `stage.early_primary.to`
+- `stage.primary.from`
+- `stage.primary.to`
+- `stage.lower_secondary.from`
+- `stage.lower_secondary.to`
+- `stage.upper_secondary.from`
+- `stage.upper_secondary.to`
+- `Issue`
+- `Reading in`
+- `Not in :language yet.`
+- `(needs checking)`
+- `+ translate it`
+- `Filed under`
+- `Edit this topic`
+- `First`
+- `You are here`
+- `Then`
+- `Where this topic sits`
+- `Next door`
+- `and`
+- `Also known as :names.`
+- `Write one`
+- `In this issue`
+- `{1} :count lesson|[2,*] :count lessons`
+- `{1} :count teacher|[2,*] :count teachers`
+- `{1} :count language|[2,*] :count languages`
+- `{1} :count version|[2,*] :count versions`
+- `:lessons, by :teachers, in :languages. Take one, change it, make it yours.`
+- `Write the next one`
+- `Nobody has written this one yet.`
+- `All :count lessons`
+- `To watch`
+- `Also`
+- `Add yours`
+- `Got a video or worksheet for this?`
+- `Add it`
+- `Sources`
+- `About this topic`
+- `What would you like to learn today, :name?`
+- `What are we working on, :name?`
+- `Stuck on something, :name?`
+- `Where shall we start, :name?`
+- `What would you like to learn today?`
+- `What are we working on?`
+- `Stuck on something?`
+- `Where shall we start?`
+- `Find a lesson`
+- `Find exercises`
+- `Guide me`
+- `What do you need to teach or learn? For example: adding fractions with unlike denominators, ages 10 to 12`
+- `What do you want to practise? For example: 15 questions on solving linear equations`
+- `Tell us the problem you're stuck on, and what you've tried so far.`
+- `We search the lessons teachers have shared and show you the best ones, in your language.`
+- `We find exercises at the right level, and can put a set together for you.`
+- `Hints, not answers. We ask questions and point the way, so you work it out yourself.`
+- `Adding fractions with different denominators`
+- `How plants make food, ages 9 to 11`
+- `The causes of the First World War`
+- `Solving linear equations, easy to hard`
+- `Past tense verbs, ten questions`
+- `Reading a bar chart`
+- `I don't get why you flip the second fraction when dividing`
+- `I solved 3x + 5 = 20 and got x = 8`
+- `How do I start an essay on the French Revolution?`
+- `How can we help?`
+- `Ask the tutor`
+- `Send`
+- `Try`
+- `The tutor isn't open yet, but this is where you'll ask. Meanwhile, browse the topics below.`
+- `:provider is a US company, and this video isn't hosted on European servers. Playing it shares your IP address and device details with them.`
+- `Got it, don't show this again`
+- `Edited by teachers`
+- `Ask questions, get answers and exercise what you've learned`
+- `Follow all exercises and animations for the most effective learning`
+- `Doesn't solve it for you`
+- `Yes`
+- `No`
 
 ## Checked
 
