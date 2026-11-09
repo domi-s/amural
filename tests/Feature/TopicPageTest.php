@@ -3,6 +3,7 @@
 use App\Actions\Concepts\CreateConceptEdge;
 use App\Actions\Concepts\UpdateConceptLabel;
 use App\Enums\ConceptKind;
+use App\Enums\ConceptStatus;
 use App\Enums\EdgeStatus;
 use App\Enums\EdgeStrength;
 use App\Enums\EdgeType;
@@ -261,6 +262,102 @@ it('shows stages without ages in words', function () {
 
 // The path
 
+it('draws the path from prerequisites through this topic to what it leads to, required first', function () {
+    $topic = pageTopic(['en-GB' => 'Adding fractions']);
+    $equivalent = pageTopic(['en-GB' => 'Equivalent fractions']);
+    $helpful = pageTopic(['en-GB' => 'Adding whole numbers']);
+    $zebra = pageTopic(['en-GB' => 'Zebra prerequisite']);
+    $next = pageTopic(['en-GB' => 'Subtracting fractions']);
+
+    pageEdge($helpful, $topic, EdgeType::Prerequisite, strength: EdgeStrength::Helpful);
+    pageEdge($zebra, $topic, EdgeType::Prerequisite, strength: EdgeStrength::Required);
+    pageEdge($equivalent, $topic, EdgeType::Prerequisite, strength: EdgeStrength::Required);
+    pageEdge($topic, $next, EdgeType::Prerequisite);
+
+    $html = $this->get(topicUrl($topic, 'adding-fractions'))->content();
+
+    // At most two on each side: the two required ones, then this topic, then what it leads to.
+    expect($html)->toMatch('/First.*Equivalent fractions.*First.*Zebra prerequisite.*You are here.*Adding fractions.*Then.*Subtracting fractions/s');
+    expect($html)->not->toContain('Adding whole numbers</a>');
+    expect($html)->toContain('<ol class="relative');
+    expect($html)->toContain('aria-current="location"');
+});
+
+it('hides the path when the topic has no prerequisites and leads nowhere', function () {
+    $topic = pageTopic(['en-GB' => 'Counting']);
+
+    $this->get(topicUrl($topic, 'counting'))->assertDontSee('You are here')->assertDontSee('Next door');
+});
+
+it('puts related, special-case and narrower topics in one sentence, at most five', function () {
+    $topic = pageTopic(['en-GB' => 'Quadrilaterals']);
+    $square = pageTopic(['en-GB' => 'Square']);
+    $rectangle = pageTopic(['en-GB' => 'Rectangle']);
+    $polygon = pageTopic(['en-GB' => 'Polygon']);
+    $perimeter = pageTopic(['en-GB' => 'Perimeter']);
+
+    pageEdge($square, $topic, EdgeType::Broader);
+    pageEdge($rectangle, $topic, EdgeType::Broader);
+    pageEdge($topic, $polygon, EdgeType::SpecialCase);
+    pageEdge($square, $topic, EdgeType::SpecialCase);
+    pageEdge($topic, $perimeter, EdgeType::Related);
+
+    $html = $this->get(topicUrl($topic, 'quadrilaterals'))->content();
+
+    expect($html)->toMatch('/Next door:.*Perimeter.*Polygon.*Square.*and\s*<a[^>]*>Rectangle<\/a>\./s');
+    // Square is both narrower and a special case, and is listed once.
+    expect(substr_count($html, '>Square</a>'))->toBe(1);
+    expect($html)->not->toContain('Before this')->not->toContain('Show proposed links');
+
+    foreach (range(1, 8) as $i) {
+        pageEdge($topic, pageTopic(['en-GB' => "Extra {$i}"]), EdgeType::Related);
+    }
+
+    $html = $this->get(topicUrl($topic, 'quadrilaterals'))->content();
+    $sentence = substr($html, strpos($html, 'Next door:'), strpos($html, '</p>', strpos($html, 'Next door:')) - strpos($html, 'Next door:'));
+
+    expect(substr_count($sentence, '<a '))->toBe(5);
+});
+
+it('links to each topic at its canonical URL in the visitor\'s language', function () {
+    $topic = pageTopic(['en-GB' => 'Fractions', 'ro-RO' => 'Fracții']);
+    $child = pageTopic(['en-GB' => 'Adding fractions', 'ro-RO' => 'Adunarea fracțiilor']);
+    pageEdge($child, $topic, EdgeType::Broader);
+
+    $this->get(topicUrl($topic, 'fractii', '?lang=ro-RO'))
+        ->assertSee(url("/topic/{$child->public_id}/adunarea-fractiilor"), false)
+        ->assertSee('Adunarea fracțiilor');
+});
+
+it('shows only reviewed links, with no way to ask for the proposed ones', function () {
+    $topic = pageTopic(['en-GB' => 'Fractions']);
+    $reviewed = pageTopic(['en-GB' => 'Reviewed neighbour']);
+    $proposed = pageTopic(['en-GB' => 'Proposed neighbour']);
+    $rejected = pageTopic(['en-GB' => 'Rejected neighbour']);
+
+    pageEdge($reviewed, $topic, EdgeType::Broader);
+    pageEdge($proposed, $topic, EdgeType::Broader, EdgeStatus::MachineProposed);
+    pageEdge($rejected, $topic, EdgeType::Broader, EdgeStatus::Rejected);
+
+    foreach (['', '?proposed=1'] as $query) {
+        $this->get(topicUrl($topic, 'fractions', $query))
+            ->assertSee('Reviewed neighbour')
+            ->assertDontSee('Proposed neighbour')
+            ->assertDontSee('Rejected neighbour')
+            ->assertDontSee('proposed links');
+    }
+});
+
+it('leaves out neighbours that have been deprecated', function () {
+    $topic = pageTopic(['en-GB' => 'Fractions']);
+    $gone = pageTopic(['en-GB' => 'Retired neighbour'], ['status' => ConceptStatus::Deprecated]);
+    pageEdge($gone, $topic, EdgeType::Broader);
+
+    $this->get(topicUrl($topic, 'fractions'))->assertDontSee('Retired neighbour');
+});
+
+// Queries: a fixed number however many neighbours the topic has.
+
 function queriesForTopicWith(int $neighbours): int
 {
     $topic = pageTopic(['en-GB' => "Hub {$neighbours}", 'ro-RO' => "Nod {$neighbours}", 'es-ES' => "Centro {$neighbours}"]);
@@ -289,3 +386,10 @@ function queriesForTopicWith(int $neighbours): int
 
     return $count;
 }
+
+it('makes the same number of queries however many topics it links to, and never lazy-loads', function () {
+    $few = queriesForTopicWith(2);
+    $many = queriesForTopicWith(16);
+
+    expect($many)->toBe($few);
+});

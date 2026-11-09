@@ -4,12 +4,16 @@ namespace App\Support;
 
 use App\Enums\ConceptStatus;
 use App\Enums\EdgeStatus;
+use App\Enums\EdgeStrength;
 use App\Enums\EdgeType;
 use App\Enums\LabelStatus;
+use App\Enums\LessonStatus;
+use App\Models\Artifact;
 use App\Models\Concept;
 use App\Models\ConceptEdge;
 use App\Models\Locale;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Route;
 
 /**
  * Gathers what a topic page shows, with a fixed number of queries however many links there
@@ -37,6 +41,15 @@ class BuildTopicPage
 
         $edges = $this->edges($concept, $statuses);
         $parents = $this->parents($edges, $concept);
+        $before = $this->links($edges, EdgeType::Prerequisite, fromThis: false, concept: $concept);
+        $leadsTo = $this->links($edges, EdgeType::Prerequisite, fromThis: true, concept: $concept);
+
+        $localeOrder = array_values(array_unique([$this->locales->contentChain()[0] ?? LocaleResolver::DEFAULT, ...$this->locales->preferredLocales()]));
+        [$lessons, $stats] = $this->lessons($concept, $allLocales, $localeOrder);
+        [$videos, $artifactTotal] = $this->artifacts($concept, $allLocales, $localeOrder);
+
+        $name = $label->label->pref ?? __('Untitled topic');
+        $language = $shown?->language;
 
         return new TopicPage(
             concept: $concept,
@@ -49,7 +62,39 @@ class BuildTopicPage
             issue: $parents[0] ?? null,
             filedUnder: $this->breadcrumb($parents[0] ?? null, $statuses),
             languages: $this->languages($concept, $allLocales),
+            path: TopicPageData::pathStops($before, $name, $language !== null && $language !== app()->getLocale() ? $language : null, $leadsTo),
+            neighbours: $this->neighbours($edges, $concept),
+            lessons: $lessons,
+            stats: $stats,
+            videos: $videos,
+            artifactTotal: $artifactTotal,
         );
+    }
+
+    /**
+     * "Next door": related, special-case and narrower topics, once each, at most five.
+     *
+     * @param  Collection<int, ConceptEdge>  $edges
+     * @return list<TopicLink>
+     */
+    private function neighbours(Collection $edges, Concept $concept): array
+    {
+        $links = array_merge(
+            $this->related($edges, $concept),
+            $this->links($edges, EdgeType::Broader, fromThis: false, concept: $concept),
+        );
+
+        $seen = [];
+        $unique = [];
+
+        foreach ($links as $link) {
+            if (! isset($seen[$link->concept->id])) {
+                $seen[$link->concept->id] = true;
+                $unique[] = $link;
+            }
+        }
+
+        return array_slice($unique, 0, TopicPageData::MAX_NEIGHBOURS);
     }
 
     /**
@@ -70,6 +115,24 @@ class BuildTopicPage
     }
 
     /**
+     * Links of one kind of edge. `fromThis` says which end of the edge is this topic: when it is
+     * the `from` end the link is to the `to` topic, and the other way round.
+     *
+     * @param  Collection<int, ConceptEdge>  $edges
+     * @return list<TopicLink>
+     */
+    private function links(Collection $edges, EdgeType $type, bool $fromThis, Concept $concept): array
+    {
+        $links = $edges
+            ->filter(fn (ConceptEdge $edge) => $edge->type === $type
+                && ($fromThis ? $edge->from_concept_id === $concept->id : $edge->to_concept_id === $concept->id))
+            ->map(fn (ConceptEdge $edge) => $this->link($edge, $fromThis ? $edge->to : $edge->from))
+            ->filter();
+
+        return $this->sorted($links, byStrength: $type === EdgeType::Prerequisite && ! $fromThis);
+    }
+
+    /**
      * This topic's parents, in the order the links were first recorded, so "first parent" is
      * stable and does not change when a name does.
      *
@@ -85,6 +148,23 @@ class BuildTopicPage
             ->filter()
             ->values()
             ->all();
+    }
+
+    /**
+     * Related and special-case topics, whichever end of the edge this topic is.
+     *
+     * @param  Collection<int, ConceptEdge>  $edges
+     * @return list<TopicLink>
+     */
+    private function related(Collection $edges, Concept $concept): array
+    {
+        $links = $edges
+            ->filter(fn (ConceptEdge $edge) => in_array($edge->type, [EdgeType::Related, EdgeType::SpecialCase], true))
+            ->map(fn (ConceptEdge $edge) => $this->link($edge, $edge->from_concept_id === $concept->id ? $edge->to : $edge->from))
+            ->filter()
+            ->unique(fn (TopicLink $link) => $link->concept->id);
+
+        return $this->sorted($links, byStrength: false);
     }
 
     private function link(ConceptEdge $edge, Concept $other): ?TopicLink
@@ -103,6 +183,25 @@ class BuildTopicPage
             strength: $edge->strength,
             language: $label === null ? null : explode('-', $label->locale_code)[0],
         );
+    }
+
+    /**
+     * @param  Collection<int, TopicLink>  $links
+     * @return list<TopicLink>
+     */
+    private function sorted(Collection $links, bool $byStrength): array
+    {
+        return $links
+            ->sortBy(fn (TopicLink $link) => [
+                $byStrength ? match ($link->strength) {
+                    EdgeStrength::Required => 0,
+                    EdgeStrength::Helpful => 1,
+                    null => 2,
+                } : 0,
+                mb_strtolower($link->name),
+            ])
+            ->values()
+            ->all();
     }
 
     /**
@@ -137,6 +236,75 @@ class BuildTopicPage
         }
 
         return $trail;
+    }
+
+    /**
+     * Published lessons on the topic in reading order, and the counts for the sentence above them.
+     *
+     * @param  Collection<int, Locale>  $allLocales
+     * @param  list<string>  $localeOrder
+     * @return array{0: list<LessonEntry>, 1: LessonStats}
+     */
+    private function lessons(Concept $concept, Collection $allLocales, array $localeOrder): array
+    {
+        $lessons = $concept->lessons()
+            ->where('lessons.status', LessonStatus::Published->value)
+            ->with(['owner', 'headRevision'])
+            ->withCount('revisions')
+            ->get();
+
+        $entries = [];
+
+        foreach ($lessons as $lesson) {
+            $locale = $allLocales->firstWhere('code', $lesson->locale_code);
+
+            if ($locale === null) {
+                continue;
+            }
+
+            $entries[] = new LessonEntry(
+                title: $lesson->title,
+                url: Route::has('lessons.show')
+                    ? route('lessons.show', array_filter(['lesson' => $lesson->public_id, 'slug' => $lesson->slug]))
+                    : null,
+                author: $lesson->owner->name,
+                authorId: $lesson->owner_id,
+                locale: $locale,
+                versions: max(1, (int) $lesson->revisions_count),
+                primary: (bool) $lesson->getRelation('pivot')->getAttribute('is_primary'),
+                updatedAt: $lesson->headRevision->created_at ?? $lesson->updated_at,
+            );
+        }
+
+        $stats = new LessonStats(
+            lessons: count($entries),
+            teachers: count(array_unique(array_map(fn (LessonEntry $entry) => $entry->authorId, $entries))),
+            languages: count(array_unique(array_map(fn (LessonEntry $entry) => $entry->locale->code, $entries))),
+        );
+
+        return [TopicPageData::orderLessons($entries, $localeOrder), $stats];
+    }
+
+    /**
+     * The topic's videos, files and links, split into the featured video, the second one and the rest.
+     *
+     * @param  Collection<int, Locale>  $allLocales
+     * @param  list<string>  $localeOrder
+     * @return array{0: VideoPicks, 1: int}
+     */
+    private function artifacts(Concept $concept, Collection $allLocales, array $localeOrder): array
+    {
+        $entries = $concept->artifacts()->with('owner')->get()->map(function (Artifact $artifact) use ($allLocales) {
+            $host = $artifact->url === null ? null : parse_url($artifact->url, PHP_URL_HOST);
+
+            return new ArtifactEntry(
+                artifact: $artifact,
+                locale: $artifact->locale_code === null ? null : $allLocales->firstWhere('code', $artifact->locale_code),
+                host: is_string($host) ? preg_replace('/^www\./', '', $host) : null,
+            );
+        })->values()->all();
+
+        return [TopicPageData::pickVideos($entries, $localeOrder), count($entries)];
     }
 
     /**

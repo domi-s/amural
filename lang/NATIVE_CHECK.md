@@ -44,6 +44,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `This topic is deprecated.`
 - `Definition`
 - `No definition yet.`
+- `Before this`
+- `Show proposed links`
 - `Untitled topic`
 - `Mathematics`
 - `Concept`
@@ -59,8 +61,14 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Graduate`
 - `This topic has been replaced`
 - `It was replaced by:`
+- `Play video: :title`
 - `History`
 - `Topic actions`
+- `Video`
+- `Image`
+- `File`
+- `Worksheet`
+- `Link`
 - `List`
 - `Map`
 - `Choose by`
@@ -94,9 +102,27 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Filed under`
 - `Edit this topic`
 - `First`
+- `You are here`
+- `Then`
+- `Where this topic sits`
+- `Next door`
+- `and`
 - `Also known as :names.`
 - `Write one`
 - `In this issue`
+- `{1} :count lesson|[2,*] :count lessons`
+- `{1} :count teacher|[2,*] :count teachers`
+- `{1} :count language|[2,*] :count languages`
+- `{1} :count version|[2,*] :count versions`
+- `:lessons, by :teachers, in :languages. Take one, change it, make it yours.`
+- `Write the next one`
+- `Nobody has written this one yet.`
+- `All :count lessons`
+- `To watch`
+- `Also`
+- `Add yours`
+- `Got a video or worksheet for this?`
+- `Add it`
 - `About this topic`
 - `Edited by teachers`
 
@@ -139,6 +165,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `This topic is deprecated.`
 - `Definition`
 - `No definition yet.`
+- `Before this`
+- `Show proposed links`
 - `Untitled topic`
 - `Mathematics`
 - `Concept`
@@ -154,8 +182,14 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Graduate`
 - `This topic has been replaced`
 - `It was replaced by:`
+- `Play video: :title`
 - `History`
 - `Topic actions`
+- `Video`
+- `Image`
+- `File`
+- `Worksheet`
+- `Link`
 - `List`
 - `Map`
 - `Choose by`
@@ -189,9 +223,27 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Filed under`
 - `Edit this topic`
 - `First`
+- `You are here`
+- `Then`
+- `Where this topic sits`
+- `Next door`
+- `and`
 - `Also known as :names.`
 - `Write one`
 - `In this issue`
+- `{1} :count lesson|[2,*] :count lessons`
+- `{1} :count teacher|[2,*] :count teachers`
+- `{1} :count language|[2,*] :count languages`
+- `{1} :count version|[2,*] :count versions`
+- `:lessons, by :teachers, in :languages. Take one, change it, make it yours.`
+- `Write the next one`
+- `Nobody has written this one yet.`
+- `All :count lessons`
+- `To watch`
+- `Also`
+- `Add yours`
+- `Got a video or worksheet for this?`
+- `Add it`
 - `About this topic`
 - `Edited by teachers`
 
