@@ -6,7 +6,7 @@
         <title>{{ config('app.name') }}</title>
         <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
         <x-font-preload />
-        @vite(['resources/css/app.css'])
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
     </head>
     <body class="min-h-dvh bg-paper text-marker font-sans antialiased">

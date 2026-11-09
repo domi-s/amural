@@ -28,5 +28,14 @@
     "Move down": "Bajar",
     "At least one language must remain.": "Debe quedar al menos un idioma.",
     ":country flag": "Bandera de :country",
-    ":language flag": "Bandera de :language"
+    ":language flag": "Bandera de :language",
+    "List": "Lista",
+    "Map": "Mapa",
+    "Choose by": "Elegir con",
+    "Choose a country on the map": "Elige un país en el mapa",
+    "Loading the map…": "Cargando el mapa…",
+    "The map could not be loaded. Use the list instead.": "No se pudo cargar el mapa. Usa la lista.",
+    "Shaded: where :language is spoken": "Sombreado: donde se habla :language",
+    "No language of this country is available yet.": "Aún no hay ningún idioma de este país disponible.",
+    "Other languages spoken here are not available yet.": "Los demás idiomas que se hablan aquí aún no están disponibles."
 }
