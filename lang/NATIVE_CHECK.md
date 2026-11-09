@@ -44,6 +44,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `This topic is deprecated.`
 - `Definition`
 - `No definition yet.`
+- `Before this`
+- `Show proposed links`
 - `Untitled topic`
 - `Mathematics`
 - `Concept`
@@ -94,6 +96,11 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Filed under`
 - `Edit this topic`
 - `First`
+- `You are here`
+- `Then`
+- `Where this topic sits`
+- `Next door`
+- `and`
 - `Also known as :names.`
 - `Write one`
 - `In this issue`
@@ -139,6 +146,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `This topic is deprecated.`
 - `Definition`
 - `No definition yet.`
+- `Before this`
+- `Show proposed links`
 - `Untitled topic`
 - `Mathematics`
 - `Concept`
@@ -189,6 +198,11 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Filed under`
 - `Edit this topic`
 - `First`
+- `You are here`
+- `Then`
+- `Where this topic sits`
+- `Next door`
+- `and`
 - `Also known as :names.`
 - `Write one`
 - `In this issue`

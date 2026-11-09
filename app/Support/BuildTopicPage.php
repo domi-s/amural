@@ -4,6 +4,7 @@ namespace App\Support;
 
 use App\Enums\ConceptStatus;
 use App\Enums\EdgeStatus;
+use App\Enums\EdgeStrength;
 use App\Enums\EdgeType;
 use App\Enums\LabelStatus;
 use App\Models\Concept;
@@ -37,6 +38,11 @@ class BuildTopicPage
 
         $edges = $this->edges($concept, $statuses);
         $parents = $this->parents($edges, $concept);
+        $before = $this->links($edges, EdgeType::Prerequisite, fromThis: false, concept: $concept);
+        $leadsTo = $this->links($edges, EdgeType::Prerequisite, fromThis: true, concept: $concept);
+
+        $name = $label->label->pref ?? __('Untitled topic');
+        $language = $shown?->language;
 
         return new TopicPage(
             concept: $concept,
@@ -49,7 +55,35 @@ class BuildTopicPage
             issue: $parents[0] ?? null,
             filedUnder: $this->breadcrumb($parents[0] ?? null, $statuses),
             languages: $this->languages($concept, $allLocales),
+            path: TopicPageData::pathStops($before, $name, $language !== null && $language !== app()->getLocale() ? $language : null, $leadsTo),
+            neighbours: $this->neighbours($edges, $concept),
         );
+    }
+
+    /**
+     * "Next door": related, special-case and narrower topics, once each, at most five.
+     *
+     * @param  Collection<int, ConceptEdge>  $edges
+     * @return list<TopicLink>
+     */
+    private function neighbours(Collection $edges, Concept $concept): array
+    {
+        $links = array_merge(
+            $this->related($edges, $concept),
+            $this->links($edges, EdgeType::Broader, fromThis: false, concept: $concept),
+        );
+
+        $seen = [];
+        $unique = [];
+
+        foreach ($links as $link) {
+            if (! isset($seen[$link->concept->id])) {
+                $seen[$link->concept->id] = true;
+                $unique[] = $link;
+            }
+        }
+
+        return array_slice($unique, 0, TopicPageData::MAX_NEIGHBOURS);
     }
 
     /**
@@ -70,6 +104,24 @@ class BuildTopicPage
     }
 
     /**
+     * Links of one kind of edge. `fromThis` says which end of the edge is this topic: when it is
+     * the `from` end the link is to the `to` topic, and the other way round.
+     *
+     * @param  Collection<int, ConceptEdge>  $edges
+     * @return list<TopicLink>
+     */
+    private function links(Collection $edges, EdgeType $type, bool $fromThis, Concept $concept): array
+    {
+        $links = $edges
+            ->filter(fn (ConceptEdge $edge) => $edge->type === $type
+                && ($fromThis ? $edge->from_concept_id === $concept->id : $edge->to_concept_id === $concept->id))
+            ->map(fn (ConceptEdge $edge) => $this->link($edge, $fromThis ? $edge->to : $edge->from))
+            ->filter();
+
+        return $this->sorted($links, byStrength: $type === EdgeType::Prerequisite && ! $fromThis);
+    }
+
+    /**
      * This topic's parents, in the order the links were first recorded, so "first parent" is
      * stable and does not change when a name does.
      *
@@ -85,6 +137,23 @@ class BuildTopicPage
             ->filter()
             ->values()
             ->all();
+    }
+
+    /**
+     * Related and special-case topics, whichever end of the edge this topic is.
+     *
+     * @param  Collection<int, ConceptEdge>  $edges
+     * @return list<TopicLink>
+     */
+    private function related(Collection $edges, Concept $concept): array
+    {
+        $links = $edges
+            ->filter(fn (ConceptEdge $edge) => in_array($edge->type, [EdgeType::Related, EdgeType::SpecialCase], true))
+            ->map(fn (ConceptEdge $edge) => $this->link($edge, $edge->from_concept_id === $concept->id ? $edge->to : $edge->from))
+            ->filter()
+            ->unique(fn (TopicLink $link) => $link->concept->id);
+
+        return $this->sorted($links, byStrength: false);
     }
 
     private function link(ConceptEdge $edge, Concept $other): ?TopicLink
@@ -103,6 +172,25 @@ class BuildTopicPage
             strength: $edge->strength,
             language: $label === null ? null : explode('-', $label->locale_code)[0],
         );
+    }
+
+    /**
+     * @param  Collection<int, TopicLink>  $links
+     * @return list<TopicLink>
+     */
+    private function sorted(Collection $links, bool $byStrength): array
+    {
+        return $links
+            ->sortBy(fn (TopicLink $link) => [
+                $byStrength ? match ($link->strength) {
+                    EdgeStrength::Required => 0,
+                    EdgeStrength::Helpful => 1,
+                    null => 2,
+                } : 0,
+                mb_strtolower($link->name),
+            ])
+            ->values()
+            ->all();
     }
 
     /**

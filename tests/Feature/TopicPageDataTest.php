@@ -7,6 +7,7 @@ use App\Models\Concept;
 use App\Models\Locale;
 use App\Support\ArtifactEntry;
 use App\Support\LessonEntry;
+use App\Support\PathStop;
 use App\Support\TopicLink;
 use App\Support\TopicPageData;
 use Illuminate\Support\Carbon;
@@ -82,6 +83,33 @@ it('gives no drop cap in Greek or Cyrillic, or for a letter the display font can
 });
 
 // The path
+
+it('has no path without prerequisites or a next step', function () {
+    expect(TopicPageData::pathStops([], 'Here', null, []))->toBe([]);
+});
+
+it('places the stops left to right: first, here, then, at most two on each side', function () {
+    $stops = TopicPageData::pathStops([topicLink('a'), topicLink('b'), topicLink('c')], 'Here', null, [topicLink('x'), topicLink('y'), topicLink('z')]);
+
+    expect(array_map(fn (PathStop $s) => $s->kind.':'.$s->name, $stops))
+        ->toBe(['first:a', 'first:b', 'here:Here', 'then:x', 'then:y']);
+});
+
+it('spreads the stops evenly between 12% and 88%', function () {
+    $stops = TopicPageData::pathStops([topicLink('a')], 'Here', null, [topicLink('x')]);
+
+    expect(array_map(fn (PathStop $s) => $s->x, $stops))->toBe([12.0, 50.0, 88.0]);
+});
+
+it('links every stop but this topic, which is not a link', function () {
+    $stops = TopicPageData::pathStops([topicLink('a')], 'Here', 'ro', []);
+
+    expect($stops[0]->url)->toBe('/topic/a');
+    expect($stops[1]->url)->toBeNull();
+    expect($stops[1]->lang)->toBe('ro');
+});
+
+// Lesson order
 
 it('writes the kicker stages in words and the filed-under ages as numbers', function () {
     expect(TopicPageData::stageKicker(Stage::Primary, Stage::LowerSecondary))->toBe('Primary to lower secondary');
