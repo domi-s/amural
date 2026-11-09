@@ -1,0 +1,68 @@
+<?php
+
+namespace App\Support;
+
+use App\Enums\Stage;
+
+/**
+ * The choices the topic page makes about its content. Pure functions with no database
+ * or view in them, so each rule can be tested on its own.
+ */
+final class TopicPageData
+{
+    /**
+     * The index of the word in a title to draw a marker circle around: the longest word of five
+     * or more letters that is not the first word (the first earliest on a tie). Null if none.
+     */
+    public static function circledWordIndex(string $title): ?int
+    {
+        $best = null;
+        $bestLength = 4;
+
+        foreach (explode(' ', $title) as $index => $word) {
+            if ($index === 0) {
+                continue;
+            }
+
+            $length = mb_strlen((string) preg_replace('/[^\p{L}]/u', '', $word));
+
+            if ($length > $bestLength) {
+                $best = $index;
+                $bestLength = $length;
+            }
+        }
+
+        return $best;
+    }
+
+    /**
+     * The definition split into a drop cap and the rest, or null when it should be set plainly:
+     * only Latin script gets a drop cap, and only when the display font can draw the letter.
+     *
+     * @return array{0: string, 1: string}|null
+     */
+    public static function dropCap(string $definition, ?string $script): ?array
+    {
+        if ($script !== 'Latn' || $definition === '') {
+            return null;
+        }
+
+        $first = mb_substr($definition, 0, 1);
+
+        if (preg_match('/^\p{L}$/u', $first) !== 1 || ! DisplayFont::supports($first)) {
+            return null;
+        }
+
+        return [$first, mb_substr($definition, 1)];
+    }
+
+    /**
+     * "Primary to lower secondary", or just "Primary" for one stage.
+     */
+    public static function stageKicker(Stage $from, Stage $to): string
+    {
+        return $from === $to
+            ? $from->label()
+            : __(':from to :to', ['from' => $from->label(), 'to' => mb_strtolower($to->label())]);
+    }
+}

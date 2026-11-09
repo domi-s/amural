@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Concept;
+use App\Support\BuildTopicPage;
 use App\Support\TopicLink;
 use App\Support\TopicResolution;
 use App\Support\TopicResolver;
@@ -20,6 +21,7 @@ class ShowTopic
         Request $request,
         Concept $concept,
         TopicResolver $resolver,
+        BuildTopicPage $build,
         ?string $slug = null,
     ): View|RedirectResponse {
         $resolution = $resolver->resolve($concept, $slug, $request->query());
@@ -46,6 +48,8 @@ class ShowTopic
             ]);
         }
 
-        return view('topics.show', ['concept' => $concept]);
+        return view('topics.show', [
+            'page' => $build->execute($concept),
+        ]);
     }
 }
