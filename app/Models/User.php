@@ -78,6 +78,12 @@ class User extends Authenticatable // implements MustVerifyEmail
         return 'u';
     }
 
+    /** Curators and admins decide what is reviewed. */
+    public function isCurator(): bool
+    {
+        return in_array($this->role, [UserRole::Curator, UserRole::Admin], true);
+    }
+
     /**
      * A default username from the name, made unique with a number suffix.
      */
