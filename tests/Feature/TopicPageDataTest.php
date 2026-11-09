@@ -135,6 +135,36 @@ it('keeps the given order for lessons that tie', function () {
 
 // Videos
 
+it('features the first video in the visitor\'s language, then language-neutral ones, then other languages', function () {
+    $picks = TopicPageData::pickVideos([
+        artifactEntry('german', 'de-DE'),
+        artifactEntry('neutral', null),
+        artifactEntry('romanian', 'ro-RO'),
+        artifactEntry('english', 'en-GB'),
+    ], ['en-GB', 'ro-RO']);
+
+    expect($picks->featured->artifact->title)->toBe('english');
+    expect($picks->second->artifact->title)->toBe('romanian');
+    expect(array_map(fn (ArtifactEntry $e) => $e->artifact->title, $picks->others))->toBe(['german', 'neutral']);
+});
+
+it('leaves web pages and files out of the video slots', function () {
+    $picks = TopicPageData::pickVideos([artifactEntry('a page', 'en-GB', youtube: false), artifactEntry('a video', 'en-GB')], ['en-GB']);
+
+    expect($picks->featured->artifact->title)->toBe('a video');
+    expect($picks->second)->toBeNull();
+    expect(array_map(fn (ArtifactEntry $e) => $e->artifact->title, $picks->others))->toBe(['a page']);
+});
+
+it('has no featured video when there are only other artifacts', function () {
+    $picks = TopicPageData::pickVideos([artifactEntry('a page', null, youtube: false)], ['en-GB']);
+
+    expect($picks->featured)->toBeNull()->and($picks->second)->toBeNull();
+    expect($picks->others)->toHaveCount(1);
+});
+
+// Stages
+
 it('writes the kicker stages in words and the filed-under ages as numbers', function () {
     expect(TopicPageData::stageKicker(Stage::Primary, Stage::LowerSecondary))->toBe('Primary to lower secondary');
     expect(TopicPageData::stageKicker(Stage::Primary, Stage::Primary))->toBe('Primary');

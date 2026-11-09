@@ -8,6 +8,7 @@ use App\Enums\EdgeStrength;
 use App\Enums\EdgeType;
 use App\Enums\LabelStatus;
 use App\Enums\LessonStatus;
+use App\Models\Artifact;
 use App\Models\Concept;
 use App\Models\ConceptEdge;
 use App\Models\Locale;
@@ -45,6 +46,7 @@ class BuildTopicPage
 
         $localeOrder = array_values(array_unique([$this->locales->contentChain()[0] ?? LocaleResolver::DEFAULT, ...$this->locales->preferredLocales()]));
         [$lessons, $stats] = $this->lessons($concept, $allLocales, $localeOrder);
+        [$videos, $artifactTotal] = $this->artifacts($concept, $allLocales, $localeOrder);
 
         $name = $label->label->pref ?? __('Untitled topic');
         $language = $shown?->language;
@@ -64,6 +66,8 @@ class BuildTopicPage
             neighbours: $this->neighbours($edges, $concept),
             lessons: $lessons,
             stats: $stats,
+            videos: $videos,
+            artifactTotal: $artifactTotal,
         );
     }
 
@@ -279,6 +283,28 @@ class BuildTopicPage
         );
 
         return [TopicPageData::orderLessons($entries, $localeOrder), $stats];
+    }
+
+    /**
+     * The topic's videos, files and links, split into the featured video, the second one and the rest.
+     *
+     * @param  Collection<int, Locale>  $allLocales
+     * @param  list<string>  $localeOrder
+     * @return array{0: VideoPicks, 1: int}
+     */
+    private function artifacts(Concept $concept, Collection $allLocales, array $localeOrder): array
+    {
+        $entries = $concept->artifacts()->with('owner')->get()->map(function (Artifact $artifact) use ($allLocales) {
+            $host = $artifact->url === null ? null : parse_url($artifact->url, PHP_URL_HOST);
+
+            return new ArtifactEntry(
+                artifact: $artifact,
+                locale: $artifact->locale_code === null ? null : $allLocales->firstWhere('code', $artifact->locale_code),
+                host: is_string($host) ? preg_replace('/^www\./', '', $host) : null,
+            );
+        })->values()->all();
+
+        return [TopicPageData::pickVideos($entries, $localeOrder), count($entries)];
     }
 
     /**

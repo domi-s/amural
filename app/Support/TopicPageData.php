@@ -5,7 +5,7 @@ namespace App\Support;
 use App\Enums\Stage;
 
 /**
- * The choices the topic page makes about its content: which word to circle, where the path's stops go, which lesson comes first. Pure functions with no database
+ * The choices the topic page makes about its content: which word to circle, where the path's stops go, which lesson comes first, which video is featured. Pure functions with no database
  * or view in them, so each rule can be tested on its own.
  */
 final class TopicPageData
@@ -123,6 +123,41 @@ final class TopicPageData
         usort($keyed, fn (array $a, array $b) => $a[0] <=> $b[0]);
 
         return array_map(fn (array $pair) => $pair[1], $keyed);
+    }
+
+    /**
+     * The featured video is the first YouTube artifact in the visitor's language (then
+     * language-neutral ones, then other languages), the second video is the next one, and
+     * everything else, in its arranged order, goes in the sentence of links.
+     *
+     * @param  list<ArtifactEntry>  $artifacts  In their arranged order.
+     * @param  list<string>  $localeOrder  Locale codes, most wanted first.
+     */
+    public static function pickVideos(array $artifacts, array $localeOrder): VideoPicks
+    {
+        $rank = array_flip($localeOrder);
+        $neutral = count($localeOrder);
+
+        $videos = [];
+
+        foreach ($artifacts as $position => $entry) {
+            if ($entry->isYoutube()) {
+                $place = $entry->locale === null ? $neutral : ($rank[$entry->locale->code] ?? $neutral + 1);
+                $videos[] = [[$place, $position], $entry];
+            }
+        }
+
+        usort($videos, fn (array $a, array $b) => $a[0] <=> $b[0]);
+
+        $featured = $videos[0][1] ?? null;
+        $second = $videos[1][1] ?? null;
+
+        $others = array_values(array_filter(
+            $artifacts,
+            fn (ArtifactEntry $entry) => $entry !== $featured && $entry !== $second,
+        ));
+
+        return new VideoPicks($featured, $second, $others);
     }
 
     /**

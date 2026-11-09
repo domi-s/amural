@@ -61,8 +61,14 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Graduate`
 - `This topic has been replaced`
 - `It was replaced by:`
+- `Play video: :title`
 - `History`
 - `Topic actions`
+- `Video`
+- `Image`
+- `File`
+- `Worksheet`
+- `Link`
 - `List`
 - `Map`
 - `Choose by`
@@ -113,6 +119,10 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Nobody has written this one yet.`
 - `All :count lessons`
 - `To watch`
+- `Also`
+- `Add yours`
+- `Got a video or worksheet for this?`
+- `Add it`
 - `About this topic`
 - `Edited by teachers`
 
@@ -172,8 +182,14 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Graduate`
 - `This topic has been replaced`
 - `It was replaced by:`
+- `Play video: :title`
 - `History`
 - `Topic actions`
+- `Video`
+- `Image`
+- `File`
+- `Worksheet`
+- `Link`
 - `List`
 - `Map`
 - `Choose by`
@@ -224,6 +240,10 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Nobody has written this one yet.`
 - `All :count lessons`
 - `To watch`
+- `Also`
+- `Add yours`
+- `Got a video or worksheet for this?`
+- `Add it`
 - `About this topic`
 - `Edited by teachers`
 

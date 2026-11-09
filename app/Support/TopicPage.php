@@ -33,6 +33,8 @@ final readonly class TopicPage
         public array $neighbours,
         public array $lessons,
         public LessonStats $stats,
+        public VideoPicks $videos,
+        public int $artifactTotal,
     ) {}
 
     /**
