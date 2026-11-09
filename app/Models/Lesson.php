@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\LessonStatus;
 use App\Models\Concerns\HasPublicId;
+use Database\Factories\LessonFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Lesson extends Model
 {
-    /** @use HasFactory<\Database\Factories\LessonFactory> */
+    /** @use HasFactory<LessonFactory> */
     use HasFactory;
 
     use HasPublicId;

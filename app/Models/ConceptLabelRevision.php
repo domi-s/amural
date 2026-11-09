@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\LabelStatus;
 use App\Models\Concerns\AppendOnly;
+use Database\Factories\ConceptLabelRevisionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,10 +14,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class ConceptLabelRevision extends Model
 {
-    /** @use HasFactory<\Database\Factories\ConceptLabelRevisionFactory> */
-    use HasFactory;
-
     use AppendOnly;
+
+    /** @use HasFactory<ConceptLabelRevisionFactory> */
+    use HasFactory;
 
     public const UPDATED_AT = null;
 

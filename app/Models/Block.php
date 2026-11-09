@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\BlockType;
 use App\Models\Concerns\HasPublicId;
+use Database\Factories\BlockFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class Block extends Model
 {
-    /** @use HasFactory<\Database\Factories\BlockFactory> */
+    /** @use HasFactory<BlockFactory> */
     use HasFactory;
 
     use HasPublicId;

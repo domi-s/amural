@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\LabelStatus;
+use Database\Factories\ConceptLabelFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class ConceptLabel extends Model
 {
-    /** @use HasFactory<\Database\Factories\ConceptLabelFactory> */
+    /** @use HasFactory<ConceptLabelFactory> */
     use HasFactory;
 
     protected $fillable = [

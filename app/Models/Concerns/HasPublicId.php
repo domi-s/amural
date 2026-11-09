@@ -2,8 +2,6 @@
 
 namespace App\Models\Concerns;
 
-use Illuminate\Support\Str;
-
 /**
  * A URL-safe id: a prefix plus 8 Crockford base32 characters, e.g. c_7Q2K9M3X.
  * Internal bigint keys never leave the database.

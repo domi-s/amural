@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Locales\ReplaceContentLocales;
+use App\Livewire\LanguageSwitcher;
 use App\Models\User;
 use App\Models\UserContentLocale;
 use Database\Factories\UserFactory;
@@ -38,7 +39,7 @@ it('shows the signed-in user\'s profile, with the language switcher and a profil
     $this->actingAs($this->user)->get('/profile')
         ->assertOk()
         ->assertSee('Profile')
-        ->assertSeeLivewire(App\Livewire\LanguageSwitcher::class)
+        ->assertSeeLivewire(LanguageSwitcher::class)
         ->assertSee(route('profile'), false);
 });
 

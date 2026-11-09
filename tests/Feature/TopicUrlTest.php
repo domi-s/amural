@@ -1,7 +1,7 @@
 <?php
 
-use App\Actions\Locales\ReplaceContentLocales;
 use App\Actions\Concepts\UpdateConceptLabel;
+use App\Actions\Locales\ReplaceContentLocales;
 use App\Enums\ConceptStatus;
 use App\Enums\LabelStatus;
 use App\Models\Concept;

@@ -2,7 +2,6 @@
 
 use Illuminate\Support\Facades\Blade;
 
-
 it('renders the wordmark plain or with stars, in the display font and the text colour', function () {
     $plain = Blade::render('<x-wordmark />');
     $stars = Blade::render('<x-wordmark stars />');
