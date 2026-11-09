@@ -124,6 +124,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Got a video or worksheet for this?`
 - `Add it`
 - `About this topic`
+- `:provider is a US company, and this video isn't hosted on European servers. Playing it shares your IP address and device details with them.`
+- `Got it, don't show this again`
 - `Edited by teachers`
 
 ## Romanian (ro) - TODO native check
@@ -245,6 +247,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Got a video or worksheet for this?`
 - `Add it`
 - `About this topic`
+- `:provider is a US company, and this video isn't hosted on European servers. Playing it shares your IP address and device details with them.`
+- `Got it, don't show this again`
 - `Edited by teachers`
 
 ## Checked

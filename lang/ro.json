@@ -116,5 +116,7 @@
     "Got a video or worksheet for this?": "Ai un videoclip sau o fișă despre asta?",
     "Add it": "Adaugă-l",
     "About this topic": "Despre această temă",
+    ":provider is a US company, and this video isn't hosted on European servers. Playing it shares your IP address and device details with them.": ":provider este o companie din SUA, iar acest videoclip nu este găzduit pe servere europene. Redându-l, le transmiți adresa IP și datele dispozitivului tău.",
+    "Got it, don't show this again": "Am înțeles, nu mai afișa",
     "Edited by teachers": "Editat de profesori"
 }

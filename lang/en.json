@@ -116,5 +116,7 @@
     "Got a video or worksheet for this?": "Got a video or worksheet for this?",
     "Add it": "Add it",
     "About this topic": "About this topic",
+    ":provider is a US company, and this video isn't hosted on European servers. Playing it shares your IP address and device details with them.": ":provider is a US company, and this video isn't hosted on European servers. Playing it shares your IP address and device details with them.",
+    "Got it, don't show this again": "Got it, don't show this again",
     "Edited by teachers": "Edited by teachers"
 }
