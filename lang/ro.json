@@ -182,5 +182,13 @@
     "Cyrillic script": "scrierea chirilică",
     "Write this in :script.": "Scrie aceasta cu :script.",
     "No name yet. Add one.": "Încă nu există un nume. Adaugă unul.",
-    "Needs checking": "Trebuie verificat"
+    "Needs checking": "Trebuie verificat",
+    "Imported": "Importat",
+    "Draft": "Ciornă",
+    "Machine": "Automat",
+    "Current version": "Versiunea curentă",
+    "This topic has no name in any language yet.": "Acest subiect nu are încă un nume în nicio limbă.",
+    "Restore this version": "Restaurează această versiune",
+    "Restore this version? It is added as a new version; nothing is lost.": "Restaurezi această versiune? Se adaugă ca versiune nouă; nu se pierde nimic.",
+    "Restored the version of :date": "Versiune restaurată din :date"
 }

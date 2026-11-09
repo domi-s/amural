@@ -182,5 +182,13 @@
     "Cyrillic script": "escritura cirílica",
     "Write this in :script.": "Escribe esto en :script.",
     "No name yet. Add one.": "Aún no hay nombre. Añade uno.",
-    "Needs checking": "Hay que revisarlo"
+    "Needs checking": "Hay que revisarlo",
+    "Imported": "Importado",
+    "Draft": "Borrador",
+    "Machine": "Automático",
+    "Current version": "Versión actual",
+    "This topic has no name in any language yet.": "Este tema aún no tiene nombre en ningún idioma.",
+    "Restore this version": "Restaurar esta versión",
+    "Restore this version? It is added as a new version; nothing is lost.": "¿Restaurar esta versión? Se añade como una versión nueva; no se pierde nada.",
+    "Restored the version of :date": "Versión restaurada del :date"
 }
