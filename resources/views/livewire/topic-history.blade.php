@@ -80,7 +80,7 @@ new #[Layout('components.layouts.public')] class extends Component {
     }
 }; ?>
 
-<main id="content" class="mx-auto w-full max-w-3xl px-4 py-8 sm:px-6">
+<div class="max-w-3xl">
     <p class="text-sm"><a href="{{ route('topic.show', $concept->public_id) }}" class="underline underline-offset-4">&larr; {{ __('Back to the topic') }}</a></p>
 
     <h1 class="mt-4 font-display text-4xl italic leading-tight">{{ __('History') }}</h1>
@@ -148,4 +148,4 @@ new #[Layout('components.layouts.public')] class extends Component {
             @endforeach
         </ol>
     @endif
-</main>
+</div>
