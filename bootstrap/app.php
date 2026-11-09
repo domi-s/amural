@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ContentSecurityPolicy;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -14,6 +15,9 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // After the session starts, so the resolver can read the user and the session.
         $middleware->web(append: [SetLocale::class]);
+
+        // Global, so error pages (a 404 from route binding, say) carry the policy too.
+        $middleware->append(ContentSecurityPolicy::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

@@ -80,7 +80,7 @@ Resources for users (set verified and country), lessons (archive), suggestions (
 
 ## Phase 4: minimal UI (Livewire)
 
-Keep it plain; design comes later. Light theme: background `#F6F1E7`, text `#141414`, Inter for text.
+Keep it plain; design comes later. Light theme: background `#F6F1E7`, text `#141414`, Geologica for text.
 
 - Lesson page: shows the latest release, plus a link to history.
 - Editor: Tiptap in a `wire:ignore` block, autosaving to the draft, with a "Save version" button and a message field.
