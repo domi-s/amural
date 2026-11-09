@@ -1,4 +1,7 @@
-<x-layouts.public :title="__('Topics')">
+<x-layouts.topic :title="__('Topics')">
+  <div class="mx-auto max-w-[1240px] px-5 pb-16 pt-6 sm:px-10">
+    <x-tutor.bar :headline="$tutorHeadline" :modes="$tutorModes" />
+
     <header class="border-b border-marker pb-8">
         <h1 class="{{ \App\Support\DisplayFont::classes(__('Topics')) }} text-5xl leading-none sm:text-6xl">{{ __('Topics') }}</h1>
 
@@ -66,4 +69,10 @@
             @endforeach
         </ul>
     @endif
-</x-layouts.public>
+
+    @php($tagline = __('Lessons, shared across Europe.'))
+    <footer class="mt-24">
+        <p class="{{ \App\Support\DisplayFont::classes($tagline) }} text-2xl">{{ $tagline }}</p>
+    </footer>
+  </div>
+</x-layouts.topic>
