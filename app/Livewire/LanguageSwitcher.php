@@ -5,8 +5,12 @@ namespace App\Livewire;
 use App\Actions\Locales\SwitchContentLocale;
 use App\Models\Locale;
 use App\Models\User;
+use App\Support\FlagSprite;
+use App\Support\LanguageChoices;
 use App\Support\LocaleResolver;
+use App\Support\SvgLibrary;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
 use Livewire\Component;
 
 /**
@@ -37,7 +41,28 @@ class LanguageSwitcher extends Component
             'current' => $current,
             'launch' => $locales->where('is_launch', true),
             'others' => $locales->where('is_launch', false),
+            'mapConfig' => $this->mapConfig($locales, $current),
         ]);
+    }
+
+    /**
+     * What the map of Europe needs: where its files are, the languages by the codes the map
+     * uses, and the words it shows. The map itself is fetched only when the Map tab opens.
+     *
+     * @param  Collection<int, Locale>  $locales
+     * @return array<string, mixed>
+     */
+    private function mapConfig(Collection $locales, ?Locale $current): array
+    {
+        return [
+            'mapUrl' => asset('svg/europe-map.svg'),
+            'flagsUrl' => asset(FlagSprite::PATH),
+            'flags' => app(SvgLibrary::class)->names('flags'),
+            'current' => $current?->language,
+            'currentCode' => $current?->code,
+            'languages' => LanguageChoices::byLanguage($locales),
+            'labels' => ['choose' => __('Choose a country on the map')],
+        ];
     }
 
     /**
