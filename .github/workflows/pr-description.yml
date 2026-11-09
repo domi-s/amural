@@ -1,0 +1,49 @@
+name: pr description
+
+on:
+  pull_request:
+    types: [opened]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  fill:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fill an untouched description from the commits and changed tests
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+          BASE: ${{ github.event.pull_request.base.ref }}
+          BODY: ${{ github.event.pull_request.body }}
+        run: |
+          template="$(cat .github/pull_request_template.md)"
+          current="$(printf '%s' "$BODY" | tr -d '\r')"
+          if [ -n "$current" ] && [ "$current" != "$template" ]; then
+            echo "The description was written by hand; leaving it alone."
+            exit 0
+          fi
+
+          changes="$(git log "origin/$BASE..HEAD" --no-merges --reverse --format='* %s')"
+
+          tests="$(git diff --name-only "origin/$BASE...HEAD" -- 'tests/*Test.php' 'resources/js/*.test.js' '*.test.js' \
+            | sed -E 's#.*/##; s#\.(php|test\.js)$##' | sort -u | sed -E 's/^(.*)$/`\1`/' | paste -sd, - | sed 's/,/, /g')"
+
+          {
+            echo "## Changes"
+            echo
+            echo "$changes"
+            echo
+            echo "## Testing"
+            echo
+            [ -n "$tests" ] && echo "* Unit tests: $tests."
+            echo "* Smoketested."
+          } > body.md
+
+          gh pr edit "$PR" --body-file body.md
