@@ -200,3 +200,58 @@ it('makes the same number of queries however many topics there are', function ()
 
     expect($many)->toBe($few);
 });
+
+// The tutor bar
+
+it('has a tutor bar above the topics, greeting a signed-in visitor by first name', function () {
+    $user = App\Models\User::factory()->create(['first_name' => 'Maria']);
+
+    $html = $this->actingAs($user)->get('/topics')->assertOk()->content();
+
+    // The headline is one of four, chosen by the day.
+    expect($html)->toMatch('/(learn today|working on|Stuck on something|Where shall we start), Maria\?/');
+    // The bar comes before the page's own heading.
+    expect(strpos($html, 'id="tutor-heading"'))->toBeLessThan(strpos($html, '<h1'));
+});
+
+it('greets a guest without a name', function () {
+    $html = $this->get('/topics')->assertOk()->content();
+
+    expect($html)->toMatch('/id="tutor-heading"[^>]*>[^<,]*\?<\/h2>/')->and($html)->not->toContain('Maria');
+});
+
+it('offers three modes: find a lesson, find exercises, and be guided', function () {
+    $html = $this->get('/topics')->assertOk()->content();
+
+    expect($html)->toContain('Find a lesson')->toContain('Find exercises')->toContain('Guide me')
+        ->toContain('type="radio"')
+        ->toContain('Hints, not answers.');
+    // A real label for the box, a legend for the modes, and a send button with a name.
+    expect($html)->toContain('<label for="tutor-input" class="sr-only">Ask the tutor</label>')
+        ->toContain('<legend class="sr-only">How can we help?</legend>')
+        ->toContain('aria-label="Send"');
+});
+
+it('does nothing yet but say the tutor is not open', function () {
+    $html = $this->get('/topics')->assertOk()->content();
+
+    expect($html)->toContain('x-on:submit.prevent')->toContain('The tutor isn');
+});
+
+it('has a cat peeking over the top of the bar', function () {
+    $this->get('/topics')->assertOk()->assertSee('tutor-peek-cat', false)->assertSee('aria-hidden="true"', false);
+});
+
+it('translates the tutor bar', function () {
+    $this->get('/topics', ['Accept-Language' => 'ro'])->assertSee('Găsește o lecție')->assertSee('Ghidează-mă');
+    $this->get('/topics', ['Accept-Language' => 'es'])->assertSee('Buscar una lección')->assertSee('Guíame');
+});
+
+it('explains what the tutor does and does not do', function () {
+    $html = $this->get('/topics')->assertOk()->content();
+
+    expect($html)->toContain("Ask questions, get answers and exercise what you&#039;ve learned")
+        ->toContain('Follow all exercises and animations for the most effective learning')
+        ->toContain("Doesn&#039;t solve it for you")
+        ->toContain('aria-label="Yes"')->toContain('aria-label="No"');
+});
