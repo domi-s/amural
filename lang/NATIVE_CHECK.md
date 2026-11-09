@@ -62,6 +62,7 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `This topic has been replaced`
 - `It was replaced by:`
 - `Play video: :title`
+- `Licence`
 - `History`
 - `Topic actions`
 - `Video`
@@ -123,6 +124,7 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Add yours`
 - `Got a video or worksheet for this?`
 - `Add it`
+- `Sources`
 - `About this topic`
 - `:provider is a US company, and this video isn't hosted on European servers. Playing it shares your IP address and device details with them.`
 - `Got it, don't show this again`
@@ -185,6 +187,7 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `This topic has been replaced`
 - `It was replaced by:`
 - `Play video: :title`
+- `Licence`
 - `History`
 - `Topic actions`
 - `Video`
@@ -246,6 +249,7 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Add yours`
 - `Got a video or worksheet for this?`
 - `Add it`
+- `Sources`
 - `About this topic`
 - `:provider is a US company, and this video isn't hosted on European servers. Playing it shares your IP address and device details with them.`
 - `Got it, don't show this again`

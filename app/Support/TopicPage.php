@@ -17,6 +17,7 @@ final readonly class TopicPage
      * @param  list<PathStop>  $path  Empty when the topic has no prerequisites and leads nowhere.
      * @param  list<TopicLink>  $neighbours  Related, special-case and narrower topics, at most five.
      * @param  list<LessonEntry>  $lessons  In reading order: the visitor's language first.
+     * @param  list<SourceCredit>  $sources
      */
     public function __construct(
         public Concept $concept,
@@ -35,6 +36,7 @@ final readonly class TopicPage
         public LessonStats $stats,
         public VideoPicks $videos,
         public int $artifactTotal,
+        public array $sources,
     ) {}
 
     /**
