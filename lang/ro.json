@@ -190,5 +190,11 @@
     "This topic has no name in any language yet.": "Acest subiect nu are încă un nume în nicio limbă.",
     "Restore this version": "Restaurează această versiune",
     "Restore this version? It is added as a new version; nothing is lost.": "Restaurezi această versiune? Se adaugă ca versiune nouă; nu se pierde nimic.",
-    "Restored the version of :date": "Versiune restaurată din :date"
+    "Restored the version of :date": "Versiune restaurată din :date",
+    "Curator queue": "Coada de verificare",
+    "Names waiting to be checked, the oldest first.": "Nume care așteaptă verificarea, cele mai vechi primele.",
+    "Nothing is waiting to be checked.": "Nimic nu așteaptă verificarea.",
+    "All languages": "Toate limbile",
+    "Updated :date": "Actualizat la :date",
+    "Review": "Verifică"
 }

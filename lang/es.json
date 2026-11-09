@@ -190,5 +190,11 @@
     "This topic has no name in any language yet.": "Este tema aún no tiene nombre en ningún idioma.",
     "Restore this version": "Restaurar esta versión",
     "Restore this version? It is added as a new version; nothing is lost.": "¿Restaurar esta versión? Se añade como una versión nueva; no se pierde nada.",
-    "Restored the version of :date": "Versión restaurada del :date"
+    "Restored the version of :date": "Versión restaurada del :date",
+    "Curator queue": "Cola de revisión",
+    "Names waiting to be checked, the oldest first.": "Nombres pendientes de revisión, los más antiguos primero.",
+    "Nothing is waiting to be checked.": "No hay nada pendiente de revisión.",
+    "All languages": "Todos los idiomas",
+    "Updated :date": "Actualizado el :date",
+    "Review": "Revisar"
 }

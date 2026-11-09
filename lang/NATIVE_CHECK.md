@@ -199,6 +199,12 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Restore this version`
 - `Restore this version? It is added as a new version; nothing is lost.`
 - `Restored the version of :date`
+- `Curator queue`
+- `Names waiting to be checked, the oldest first.`
+- `Nothing is waiting to be checked.`
+- `All languages`
+- `Updated :date`
+- `Review`
 
 ## Romanian (ro) - TODO native check
 
@@ -394,6 +400,12 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Restore this version`
 - `Restore this version? It is added as a new version; nothing is lost.`
 - `Restored the version of :date`
+- `Curator queue`
+- `Names waiting to be checked, the oldest first.`
+- `Nothing is waiting to be checked.`
+- `All languages`
+- `Updated :date`
+- `Review`
 
 ## Checked
 

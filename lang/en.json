@@ -190,5 +190,11 @@
     "This topic has no name in any language yet.": "This topic has no name in any language yet.",
     "Restore this version": "Restore this version",
     "Restore this version? It is added as a new version; nothing is lost.": "Restore this version? It is added as a new version; nothing is lost.",
-    "Restored the version of :date": "Restored the version of :date"
+    "Restored the version of :date": "Restored the version of :date",
+    "Curator queue": "Curator queue",
+    "Names waiting to be checked, the oldest first.": "Names waiting to be checked, the oldest first.",
+    "Nothing is waiting to be checked.": "Nothing is waiting to be checked.",
+    "All languages": "All languages",
+    "Updated :date": "Updated :date",
+    "Review": "Review"
 }

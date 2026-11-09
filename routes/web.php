@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ShowCurationQueue;
 use App\Http\Controllers\ShowTopic;
 use App\Http\Controllers\ShowTopics;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,8 @@ Volt::route('/topic/{concept:public_id}/history', 'topic-history')->name('topic.
 Route::get('/topic/{concept:public_id}/{slug?}', ShowTopic::class)
     ->where('slug', '[A-Za-z0-9._-]+')
     ->name('topic.show');
+
+Route::get('/curate', ShowCurationQueue::class)->middleware('auth')->name('curate');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
