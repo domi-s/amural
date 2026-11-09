@@ -37,6 +37,13 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `At least one language must remain.`
 - `:country flag`
 - `:language flag`
+- `Skip to content`
+- `Log in`
+- `Register`
+- `This topic is deprecated.`
+- `Untitled topic`
+- `This topic has been replaced`
+- `It was replaced by:`
 - `List`
 - `Map`
 - `Choose by`
@@ -46,6 +53,7 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Shaded: where :language is spoken`
 - `No language of this country is available yet.`
 - `Other languages spoken here are not available yet.`
+- `First`
 
 ## Romanian (ro) - TODO native check
 
@@ -79,6 +87,13 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `At least one language must remain.`
 - `:country flag`
 - `:language flag`
+- `Skip to content`
+- `Log in`
+- `Register`
+- `This topic is deprecated.`
+- `Untitled topic`
+- `This topic has been replaced`
+- `It was replaced by:`
 - `List`
 - `Map`
 - `Choose by`
@@ -88,6 +103,7 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Shaded: where :language is spoken`
 - `No language of this country is available yet.`
 - `Other languages spoken here are not available yet.`
+- `First`
 
 ## Checked
 

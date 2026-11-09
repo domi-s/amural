@@ -29,6 +29,13 @@
     "At least one language must remain.": "At least one language must remain.",
     ":country flag": ":country flag",
     ":language flag": ":language flag",
+    "Skip to content": "Skip to content",
+    "Log in": "Log in",
+    "Register": "Register",
+    "This topic is deprecated.": "This topic is deprecated.",
+    "Untitled topic": "Untitled topic",
+    "This topic has been replaced": "This topic has been replaced",
+    "It was replaced by:": "It was replaced by:",
     "List": "List",
     "Map": "Map",
     "Choose by": "Choose by",
@@ -37,5 +44,6 @@
     "The map could not be loaded. Use the list instead.": "The map could not be loaded. Use the list instead.",
     "Shaded: where :language is spoken": "Shaded: where :language is spoken",
     "No language of this country is available yet.": "No language of this country is available yet.",
-    "Other languages spoken here are not available yet.": "Other languages spoken here are not available yet."
+    "Other languages spoken here are not available yet.": "Other languages spoken here are not available yet.",
+    "First": "First"
 }

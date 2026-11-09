@@ -29,6 +29,13 @@
     "At least one language must remain.": "Trebuie să rămână cel puțin o limbă.",
     ":country flag": "Drapelul :country",
     ":language flag": "Drapelul :language",
+    "Skip to content": "Treci la conținut",
+    "Log in": "Autentificare",
+    "Register": "Înregistrare",
+    "This topic is deprecated.": "Această temă este depășită.",
+    "Untitled topic": "Temă fără titlu",
+    "This topic has been replaced": "Această temă a fost înlocuită",
+    "It was replaced by:": "A fost înlocuită de:",
     "List": "Listă",
     "Map": "Hartă",
     "Choose by": "Alege cu",
@@ -37,5 +44,6 @@
     "The map could not be loaded. Use the list instead.": "Harta nu a putut fi încărcată. Folosește lista.",
     "Shaded: where :language is spoken": "Umbrit: unde se vorbește :language",
     "No language of this country is available yet.": "Încă nu este disponibilă nicio limbă din această țară.",
-    "Other languages spoken here are not available yet.": "Celelalte limbi vorbite aici nu sunt încă disponibile."
+    "Other languages spoken here are not available yet.": "Celelalte limbi vorbite aici nu sunt încă disponibile.",
+    "First": "Mai întâi"
 }
