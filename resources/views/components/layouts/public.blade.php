@@ -19,6 +19,10 @@
             <div class="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-3 px-4 py-4 sm:px-6">
                 <div class="flex items-baseline gap-8">
                     <a href="{{ route('home') }}" class="font-display text-3xl italic leading-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-marker">{{ config('app.name') }}</a>
+
+                    <nav aria-label="{{ __('Main') }}">
+                        <a href="{{ route('topics.index') }}" class="text-sm font-medium underline-offset-4 hover:underline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-marker">{{ __('Topics') }}</a>
+                    </nav>
                 </div>
 
                 <div class="flex items-center gap-4 text-sm">

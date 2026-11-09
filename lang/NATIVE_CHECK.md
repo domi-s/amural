@@ -38,6 +38,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `:country flag`
 - `:language flag`
 - `Skip to content`
+- `Main`
+- `Topics`
 - `Log in`
 - `Register`
 - `Breadcrumb`
@@ -45,6 +47,7 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Definition`
 - `No definition yet.`
 - `Before this`
+- `Inside this`
 - `Show proposed links`
 - `Untitled topic`
 - `Mathematics`
@@ -61,6 +64,7 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Graduate`
 - `This topic has been replaced`
 - `It was replaced by:`
+- `Lessons`
 - `Play video: :title`
 - `Licence`
 - `History`
@@ -70,6 +74,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `File`
 - `Worksheet`
 - `Link`
+- `Reviewed`
+- `No topics yet.`
 - `List`
 - `Map`
 - `Choose by`
@@ -163,6 +169,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `:country flag`
 - `:language flag`
 - `Skip to content`
+- `Main`
+- `Topics`
 - `Log in`
 - `Register`
 - `Breadcrumb`
@@ -170,6 +178,7 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Definition`
 - `No definition yet.`
 - `Before this`
+- `Inside this`
 - `Show proposed links`
 - `Untitled topic`
 - `Mathematics`
@@ -186,6 +195,7 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Graduate`
 - `This topic has been replaced`
 - `It was replaced by:`
+- `Lessons`
 - `Play video: :title`
 - `Licence`
 - `History`
@@ -195,6 +205,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `File`
 - `Worksheet`
 - `Link`
+- `Reviewed`
+- `No topics yet.`
 - `List`
 - `Map`
 - `Choose by`

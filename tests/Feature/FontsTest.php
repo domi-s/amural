@@ -15,7 +15,9 @@ const THIRD_PARTY_FONT_HOSTS = ['googleapis', 'gstatic', 'fonts.google', 'bunny.
 /** @return list<string> the pages a visitor can open without signing in */
 function publicPages(): array
 {
-    return ['/', '/login', '/register'];
+    $topic = ConceptFactory::new()->create();
+
+    return ['/', '/topics', '/login', '/register', "/topic/{$topic->public_id}"];
 }
 
 // Self-hosted body font

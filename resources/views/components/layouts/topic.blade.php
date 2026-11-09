@@ -18,6 +18,7 @@
         <header class="mx-auto flex max-w-[1240px] items-center justify-between gap-6 px-5 pb-2 pt-6 sm:px-10">
             <div class="flex items-center gap-8">
                 <x-header-wordmark />
+                <a href="{{ route('topics.index') }}" class="text-sm font-medium underline-offset-4 hover:underline">{{ __('Topics') }}</a>
                 <a href="" class="text-sm font-medium underline-offset-4 hover:underline">{{ __('Teachers') }}</a>
                 <a href="" class="text-sm font-medium underline-offset-4 hover:underline">{{ __('Students') }}</a>
                 <a href="" class="text-sm font-medium underline-offset-4 hover:underline">{{ __('Parents') }}</a>
