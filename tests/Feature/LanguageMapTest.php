@@ -155,7 +155,7 @@ it('still switches language when the map asks it to', function () {
 });
 
 it('loads the page script that registers the map on the pages that have the switcher', function () {
-    foreach (['views/welcome.blade.php', 'views/partials/head.blade.php'] as $view) {
+    foreach (['views/welcome.blade.php', 'views/components/layouts/public.blade.php', 'views/partials/head.blade.php'] as $view) {
         expect(file_get_contents(resource_path($view)))->toContain('resources/js/app.js');
     }
 });

@@ -66,6 +66,16 @@ class Concept extends Model
         return new ResolvedLabel(null, false, $chain[0]);
     }
 
+    /**
+     * What replaced this concept, if it was deprecated (a merge or a split).
+     *
+     * @return HasMany<ConceptReplacement, $this>
+     */
+    public function replacements(): HasMany
+    {
+        return $this->hasMany(ConceptReplacement::class);
+    }
+
     /** @return HasMany<ConceptEdge, $this> */
     public function outgoingEdges(): HasMany
     {

@@ -29,6 +29,13 @@
     "At least one language must remain.": "Debe quedar al menos un idioma.",
     ":country flag": "Bandera de :country",
     ":language flag": "Bandera de :language",
+    "Skip to content": "Saltar al contenido",
+    "Log in": "Iniciar sesión",
+    "Register": "Registrarse",
+    "This topic is deprecated.": "Este tema está obsoleto.",
+    "Untitled topic": "Tema sin título",
+    "This topic has been replaced": "Este tema ha sido reemplazado",
+    "It was replaced by:": "Fue reemplazado por:",
     "List": "Lista",
     "Map": "Mapa",
     "Choose by": "Elegir con",
@@ -37,5 +44,6 @@
     "The map could not be loaded. Use the list instead.": "No se pudo cargar el mapa. Usa la lista.",
     "Shaded: where :language is spoken": "Sombreado: donde se habla :language",
     "No language of this country is available yet.": "Aún no hay ningún idioma de este país disponible.",
-    "Other languages spoken here are not available yet.": "Los demás idiomas que se hablan aquí aún no están disponibles."
+    "Other languages spoken here are not available yet.": "Los demás idiomas que se hablan aquí aún no están disponibles.",
+    "First": "Primero"
 }
