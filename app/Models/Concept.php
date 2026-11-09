@@ -101,6 +101,16 @@ class Concept extends Model
             ->orderByPivot('position');
     }
 
+    /**
+     * Where the concept's data came from (curriculum statements, imported datasets).
+     *
+     * @return HasMany<ConceptSource, $this>
+     */
+    public function sources(): HasMany
+    {
+        return $this->hasMany(ConceptSource::class);
+    }
+
     /** @return HasMany<ConceptEdge, $this> */
     public function outgoingEdges(): HasMany
     {

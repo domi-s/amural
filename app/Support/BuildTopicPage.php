@@ -11,6 +11,7 @@ use App\Enums\LessonStatus;
 use App\Models\Artifact;
 use App\Models\Concept;
 use App\Models\ConceptEdge;
+use App\Models\ConceptSource;
 use App\Models\Locale;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Route;
@@ -68,6 +69,7 @@ class BuildTopicPage
             stats: $stats,
             videos: $videos,
             artifactTotal: $artifactTotal,
+            sources: $this->sources($concept),
         );
     }
 
@@ -305,6 +307,26 @@ class BuildTopicPage
         })->values()->all();
 
         return [TopicPageData::pickVideos($entries, $localeOrder), count($entries)];
+    }
+
+    /**
+     * The credits a topic's sources require, one per source and statement.
+     *
+     * @return list<SourceCredit>
+     */
+    private function sources(Concept $concept): array
+    {
+        return $concept->sources()->get()
+            ->unique(fn (ConceptSource $source) => $source->source.'|'.$source->attribution)
+            ->map(fn (ConceptSource $source) => new SourceCredit(
+                name: (string) config("amural.sources.{$source->source}", $source->source),
+                attribution: $source->attribution,
+                licence: $source->licence,
+                url: $source->url,
+            ))
+            ->sortBy('name')
+            ->values()
+            ->all();
     }
 
     /**

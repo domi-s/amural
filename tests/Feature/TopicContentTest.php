@@ -273,6 +273,69 @@ it('offers to add an artifact only when that page exists', function () {
 
 // Sources, in the footer
 
+it('names each source with its licence in the footer, and gives the full attribution', function () {
+    ConceptSource::create([
+        'concept_id' => $this->topic->id,
+        'source' => 'learning-commons-math-lc',
+        'source_version' => '2026-03',
+        'source_item_id' => 'lc-1',
+        'locale' => 'en-US',
+        'text' => 'Add fractions with unlike denominators',
+        'path' => [],
+        'licence' => 'CC-BY-4.0',
+        'attribution' => 'Knowledge Graph is provided by Learning Commons under the CC BY-4.0 license.',
+        'url' => 'https://learningcommons.org/',
+        'raw' => ['standard' => 'CCSS.MATH.CONTENT.5.NF.A.1'],
+    ]);
+
+    $html = $this->get($this->url)->content();
+
+    expect($html)->toContain('Lessons, shared across Europe.')
+        ->toContain('href="#sources"')
+        ->toContain('Learning Commons Knowledge Graph, math learning components (CC-BY-4.0)')
+        ->toContain('Edited by teachers')
+        ->toContain('id="sources"')
+        ->toContain('Knowledge Graph is provided by Learning Commons under the CC BY-4.0 license.')
+        ->toContain('Licence: CC-BY-4.0')
+        ->toContain('learningcommons.org');
+});
+
+it('never shows the original standard codes from a source', function () {
+    ConceptSource::create([
+        'concept_id' => $this->topic->id,
+        'source' => 'learning-commons-math-lc',
+        'source_version' => '1',
+        'source_item_id' => 'lc-1',
+        'locale' => 'en-US',
+        'text' => 'x',
+        'path' => ['CCSS', '5.NF'],
+        'licence' => 'CC-BY-4.0',
+        'attribution' => 'Credit.',
+        'raw' => ['standard' => 'CCSS.MATH.CONTENT.5.NF.A.1'],
+    ]);
+
+    $this->get($this->url)->assertDontSee('CCSS')->assertDontSee('5.NF');
+});
+
+it('shows each credit once however many items share it, and no sources line when there are none', function () {
+    foreach (range(1, 3) as $i) {
+        ConceptSource::create([
+            'concept_id' => $this->topic->id, 'source' => 'learning-commons-math-lc', 'source_version' => '1',
+            'source_item_id' => "lc-{$i}", 'locale' => 'en-US', 'text' => 'x', 'path' => [], 'licence' => 'CC-BY-4.0',
+            'attribution' => 'The same credit.', 'raw' => [],
+        ]);
+    }
+
+    expect(substr_count($this->get($this->url)->content(), 'The same credit.'))->toBe(1);
+
+    $bare = ConceptFactory::new()->create();
+    app(UpdateConceptLabel::class)->execute($bare, 'en-GB', ['pref' => 'Decimals'], null, LabelStatus::Reviewed);
+
+    $this->get("/topic/{$bare->public_id}/decimals")->assertDontSee('href="#sources"', false)->assertSee('Edited by teachers');
+});
+
+// History and edit
+
 it('shows History and Edit only when those pages exist, and Edit only when signed in', function () {
     $this->get($this->url)->assertDontSee('Topic actions');
 
@@ -324,6 +387,15 @@ function queriesForContent(int $items): int
 
     return $count;
 }
+
+it('makes the same number of queries however many lessons, artifacts and sources there are', function () {
+    $few = queriesForContent(1);
+    $many = queriesForContent(14);
+
+    expect($many)->toBe($few);
+});
+
+// Content hosted outside Europe
 
 it('tells people a video is hosted outside Europe when they play it, and remembers when they dismiss that', function () {
     artifactOn($this->topic, ['type' => ArtifactType::Youtube, 'youtube_id' => 'dQw4w9WgXcQ', 'title' => 'Fractions explained']);
