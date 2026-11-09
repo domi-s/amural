@@ -171,6 +171,26 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Doesn't solve it for you`
 - `Yes`
 - `No`
+- `Edit topic`
+- `Back to the topic`
+- `More languages`
+- `:named of :total languages · :reviewed reviewed`
+- `Reference`
+- `Reference language`
+- `No other language has a name for this topic yet.`
+- `Name`
+- `Other names`
+- `Remove :name`
+- `Press Enter to add a name.`
+- `What did you change?`
+- `Mark as reviewed`
+- `Save`
+- `Nothing changed.`
+- `Greek script`
+- `Cyrillic script`
+- `Write this in :script.`
+- `No name yet. Add one.`
+- `Needs checking`
 
 ## Romanian (ro) - TODO native check
 
@@ -338,6 +358,26 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Doesn't solve it for you`
 - `Yes`
 - `No`
+- `Edit topic`
+- `Back to the topic`
+- `More languages`
+- `:named of :total languages · :reviewed reviewed`
+- `Reference`
+- `Reference language`
+- `No other language has a name for this topic yet.`
+- `Name`
+- `Other names`
+- `Remove :name`
+- `Press Enter to add a name.`
+- `What did you change?`
+- `Mark as reviewed`
+- `Save`
+- `Nothing changed.`
+- `Greek script`
+- `Cyrillic script`
+- `Write this in :script.`
+- `No name yet. Add one.`
+- `Needs checking`
 
 ## Checked
 
