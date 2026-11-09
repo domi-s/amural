@@ -25,4 +25,4 @@ Full brief: `PROMPT.md`. Visual direction: `DESIGN.md`.
 - Business logic lives in `app/Actions` and `app/Domain`, not in controllers, Livewire components or models.
 - All UI strings go through `__()`, with keys in `lang/en`, `lang/es` and `lang/ro`.
 - No AI, translation, payment or ID-verification integrations yet: interfaces only, with fake implementations.
-- Brand: Paper `#F6F1E7` background, Marker `#141414` text. Display font is Philibert Italic Rush (`public/fonts`), text is Inter.
+- Brand: Paper `#F6F1E7` background, Marker `#141414` text. Display font is Philibert Italic Rush (`public/fonts`), text is Geologica (self-hosted, no third-party font requests).
