@@ -16,9 +16,11 @@ function langStrings(string $language): array
 function placeholdersIn(string $text): array
 {
     preg_match_all('/:[a-zA-Z_]+/', $text, $matches);
-    sort($matches[0]);
+    // A plural string may repeat a placeholder in each form (Romanian has three), so each counts once.
+    $found = array_values(array_unique($matches[0]));
+    sort($found);
 
-    return $matches[0];
+    return $found;
 }
 
 it('has an interface language file for every interface locale', function () {

@@ -111,6 +111,30 @@ it('links every stop but this topic, which is not a link', function () {
 
 // Lesson order
 
+it('orders lessons by language first, then primary topic, then newest', function () {
+    $lessons = [
+        lessonEntry('ro old primary', 'ro-RO', true, '2026-01-01'),
+        lessonEntry('en secondary', 'en-GB', false, '2026-05-01'),
+        lessonEntry('en primary old', 'en-GB', true, '2026-02-01'),
+        lessonEntry('en primary new', 'en-GB', true, '2026-04-01'),
+        lessonEntry('de primary', 'de-DE', true, '2026-06-01'),
+    ];
+
+    $titles = array_map(fn (LessonEntry $l) => $l->title, TopicPageData::orderLessons($lessons, ['en-GB', 'ro-RO']));
+
+    expect($titles)->toBe(['en primary new', 'en primary old', 'en secondary', 'ro old primary', 'de primary']);
+});
+
+it('keeps the given order for lessons that tie', function () {
+    $lessons = [lessonEntry('first', 'en-GB'), lessonEntry('second', 'en-GB')];
+
+    $titles = array_map(fn (LessonEntry $l) => $l->title, TopicPageData::orderLessons($lessons, ['en-GB']));
+
+    expect($titles)->toBe(['first', 'second']);
+});
+
+// Videos
+
 it('writes the kicker stages in words and the filed-under ages as numbers', function () {
     expect(TopicPageData::stageKicker(Stage::Primary, Stage::LowerSecondary))->toBe('Primary to lower secondary');
     expect(TopicPageData::stageKicker(Stage::Primary, Stage::Primary))->toBe('Primary');

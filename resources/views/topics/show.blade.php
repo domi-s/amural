@@ -12,6 +12,7 @@
 
             <div class="mag:col-start-2 mag:row-start-2">
                 <x-topic.path :stops="$page->path" :neighbours="$page->neighbours" />
+                <x-topic.lessons :page="$page" />
             </div>
         </div>
 

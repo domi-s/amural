@@ -125,6 +125,18 @@ class LocaleResolver
     }
 
     /**
+     * The signed-in user's own content languages, most preferred first; empty for a guest.
+     *
+     * @return list<string>
+     */
+    public function preferredLocales(): array
+    {
+        $user = $this->user();
+
+        return $user === null ? [] : $this->userContentLocales($user);
+    }
+
+    /**
      * Is this a locale content can be written in?
      */
     public function isValid(mixed $code): bool

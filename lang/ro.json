@@ -96,6 +96,15 @@
     "Also known as :names.": "Cunoscut și ca :names.",
     "Write one": "Scrie una",
     "In this issue": "În acest număr",
+    "{1} :count lesson|[2,*] :count lessons": "{1} :count lecție|[2,19] :count lecții|[20,*] :count de lecții",
+    "{1} :count teacher|[2,*] :count teachers": "{1} :count profesor|[2,19] :count profesori|[20,*] :count de profesori",
+    "{1} :count language|[2,*] :count languages": "{1} :count limbă|[2,19] :count limbi|[20,*] :count de limbi",
+    "{1} :count version|[2,*] :count versions": "{1} :count versiune|[2,19] :count versiuni|[20,*] :count de versiuni",
+    ":lessons, by :teachers, in :languages. Take one, change it, make it yours.": ":lessons, de la :teachers, în :languages. Ia una, schimb-o, fă-o a ta.",
+    "Write the next one": "Scrie-o pe următoarea",
+    "Nobody has written this one yet.": "Nimeni nu a scris încă această lecție.",
+    "All :count lessons": "Toate cele :count lecții",
+    "To watch": "De urmărit",
     "About this topic": "Despre această temă",
     "Edited by teachers": "Editat de profesori"
 }

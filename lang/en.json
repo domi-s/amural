@@ -96,6 +96,15 @@
     "Also known as :names.": "Also known as :names.",
     "Write one": "Write one",
     "In this issue": "In this issue",
+    "{1} :count lesson|[2,*] :count lessons": "{1} :count lesson|[2,*] :count lessons",
+    "{1} :count teacher|[2,*] :count teachers": "{1} :count teacher|[2,*] :count teachers",
+    "{1} :count language|[2,*] :count languages": "{1} :count language|[2,*] :count languages",
+    "{1} :count version|[2,*] :count versions": "{1} :count version|[2,*] :count versions",
+    ":lessons, by :teachers, in :languages. Take one, change it, make it yours.": ":lessons, by :teachers, in :languages. Take one, change it, make it yours.",
+    "Write the next one": "Write the next one",
+    "Nobody has written this one yet.": "Nobody has written this one yet.",
+    "All :count lessons": "All :count lessons",
+    "To watch": "To watch",
     "About this topic": "About this topic",
     "Edited by teachers": "Edited by teachers"
 }

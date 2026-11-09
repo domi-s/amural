@@ -104,6 +104,15 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Also known as :names.`
 - `Write one`
 - `In this issue`
+- `{1} :count lesson|[2,*] :count lessons`
+- `{1} :count teacher|[2,*] :count teachers`
+- `{1} :count language|[2,*] :count languages`
+- `{1} :count version|[2,*] :count versions`
+- `:lessons, by :teachers, in :languages. Take one, change it, make it yours.`
+- `Write the next one`
+- `Nobody has written this one yet.`
+- `All :count lessons`
+- `To watch`
 - `About this topic`
 - `Edited by teachers`
 
@@ -206,6 +215,15 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Also known as :names.`
 - `Write one`
 - `In this issue`
+- `{1} :count lesson|[2,*] :count lessons`
+- `{1} :count teacher|[2,*] :count teachers`
+- `{1} :count language|[2,*] :count languages`
+- `{1} :count version|[2,*] :count versions`
+- `:lessons, by :teachers, in :languages. Take one, change it, make it yours.`
+- `Write the next one`
+- `Nobody has written this one yet.`
+- `All :count lessons`
+- `To watch`
 - `About this topic`
 - `Edited by teachers`
 

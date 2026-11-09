@@ -22,7 +22,9 @@ class SetLocale
 
         $language = $this->resolver->interfaceLanguage();
         app()->setLocale($language);
-        Carbon::setLocale($language);
+
+        // Dates follow the full locale (en_GB, es_ES, ro_RO), so English is British, not US.
+        Carbon::setLocale(str_replace('-', '_', $this->resolver->interfaceLocale()));
 
         return $next($request);
     }

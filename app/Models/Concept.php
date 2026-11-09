@@ -11,6 +11,7 @@ use App\Support\LocaleResolver;
 use App\Support\ResolvedLabel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Concept extends Model
@@ -74,6 +75,16 @@ class Concept extends Model
     public function replacements(): HasMany
     {
         return $this->hasMany(ConceptReplacement::class);
+    }
+
+    /**
+     * Lessons about this topic.
+     *
+     * @return BelongsToMany<Lesson, $this>
+     */
+    public function lessons(): BelongsToMany
+    {
+        return $this->belongsToMany(Lesson::class, 'lesson_concepts')->withPivot('is_primary')->withTimestamps();
     }
 
     /** @return HasMany<ConceptEdge, $this> */

@@ -96,6 +96,15 @@
     "Also known as :names.": "También conocido como :names.",
     "Write one": "Escribe una",
     "In this issue": "En este número",
+    "{1} :count lesson|[2,*] :count lessons": "{1} :count lección|[2,*] :count lecciones",
+    "{1} :count teacher|[2,*] :count teachers": "{1} :count docente|[2,*] :count docentes",
+    "{1} :count language|[2,*] :count languages": "{1} :count idioma|[2,*] :count idiomas",
+    "{1} :count version|[2,*] :count versions": "{1} :count versión|[2,*] :count versiones",
+    ":lessons, by :teachers, in :languages. Take one, change it, make it yours.": ":lessons, de :teachers, en :languages. Toma una, cámbiala, hazla tuya.",
+    "Write the next one": "Escribe la siguiente",
+    "Nobody has written this one yet.": "Nadie ha escrito esta todavía.",
+    "All :count lessons": "Las :count lecciones",
+    "To watch": "Para ver",
     "About this topic": "Sobre este tema",
     "Edited by teachers": "Editado por docentes"
 }

@@ -5,7 +5,7 @@ namespace App\Support;
 use App\Enums\Stage;
 
 /**
- * The choices the topic page makes about its content: which word to circle, where the path's stops go. Pure functions with no database
+ * The choices the topic page makes about its content: which word to circle, where the path's stops go, which lesson comes first. Pure functions with no database
  * or view in them, so each rule can be tested on its own.
  */
 final class TopicPageData
@@ -13,6 +13,8 @@ final class TopicPageData
     public const MAX_PATH_SIDE = 2;
 
     public const MAX_NEIGHBOURS = 5;
+
+    public const VISIBLE_LESSONS = 8;
 
     /**
      * The index of the word in a title to draw a marker circle around: the longest word of five
@@ -95,6 +97,32 @@ final class TopicPageData
         }
 
         return $stops;
+    }
+
+    /**
+     * Lessons in reading order: the visitor's languages first (in the order given), then every
+     * other language; within a language, lessons that have this topic as their primary topic
+     * before those that only mention it; then the most recently changed first.
+     *
+     * @param  list<LessonEntry>  $lessons
+     * @param  list<string>  $localeOrder  Locale codes, most wanted first.
+     * @return list<LessonEntry>
+     */
+    public static function orderLessons(array $lessons, array $localeOrder): array
+    {
+        $rank = array_flip($localeOrder);
+        $keyed = [];
+
+        foreach ($lessons as $position => $lesson) {
+            $keyed[] = [
+                [$rank[$lesson->locale->code] ?? PHP_INT_MAX, (int) ! $lesson->primary, -($lesson->updatedAt?->getTimestamp() ?? 0), $position],
+                $lesson,
+            ];
+        }
+
+        usort($keyed, fn (array $a, array $b) => $a[0] <=> $b[0]);
+
+        return array_map(fn (array $pair) => $pair[1], $keyed);
     }
 
     /**

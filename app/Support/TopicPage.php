@@ -16,6 +16,7 @@ final readonly class TopicPage
      * @param  list<LanguageChip>  $languages  The languages the topic has a name in, in the visitor's order.
      * @param  list<PathStop>  $path  Empty when the topic has no prerequisites and leads nowhere.
      * @param  list<TopicLink>  $neighbours  Related, special-case and narrower topics, at most five.
+     * @param  list<LessonEntry>  $lessons  In reading order: the visitor's language first.
      */
     public function __construct(
         public Concept $concept,
@@ -30,6 +31,8 @@ final readonly class TopicPage
         public array $languages,
         public array $path,
         public array $neighbours,
+        public array $lessons,
+        public LessonStats $stats,
     ) {}
 
     /**

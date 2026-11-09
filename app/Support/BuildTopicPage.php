@@ -7,10 +7,12 @@ use App\Enums\EdgeStatus;
 use App\Enums\EdgeStrength;
 use App\Enums\EdgeType;
 use App\Enums\LabelStatus;
+use App\Enums\LessonStatus;
 use App\Models\Concept;
 use App\Models\ConceptEdge;
 use App\Models\Locale;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Route;
 
 /**
  * Gathers what a topic page shows, with a fixed number of queries however many links there
@@ -41,6 +43,9 @@ class BuildTopicPage
         $before = $this->links($edges, EdgeType::Prerequisite, fromThis: false, concept: $concept);
         $leadsTo = $this->links($edges, EdgeType::Prerequisite, fromThis: true, concept: $concept);
 
+        $localeOrder = array_values(array_unique([$this->locales->contentChain()[0] ?? LocaleResolver::DEFAULT, ...$this->locales->preferredLocales()]));
+        [$lessons, $stats] = $this->lessons($concept, $allLocales, $localeOrder);
+
         $name = $label->label->pref ?? __('Untitled topic');
         $language = $shown?->language;
 
@@ -57,6 +62,8 @@ class BuildTopicPage
             languages: $this->languages($concept, $allLocales),
             path: TopicPageData::pathStops($before, $name, $language !== null && $language !== app()->getLocale() ? $language : null, $leadsTo),
             neighbours: $this->neighbours($edges, $concept),
+            lessons: $lessons,
+            stats: $stats,
         );
     }
 
@@ -225,6 +232,53 @@ class BuildTopicPage
         }
 
         return $trail;
+    }
+
+    /**
+     * Published lessons on the topic in reading order, and the counts for the sentence above them.
+     *
+     * @param  Collection<int, Locale>  $allLocales
+     * @param  list<string>  $localeOrder
+     * @return array{0: list<LessonEntry>, 1: LessonStats}
+     */
+    private function lessons(Concept $concept, Collection $allLocales, array $localeOrder): array
+    {
+        $lessons = $concept->lessons()
+            ->where('lessons.status', LessonStatus::Published->value)
+            ->with(['owner', 'headRevision'])
+            ->withCount('revisions')
+            ->get();
+
+        $entries = [];
+
+        foreach ($lessons as $lesson) {
+            $locale = $allLocales->firstWhere('code', $lesson->locale_code);
+
+            if ($locale === null) {
+                continue;
+            }
+
+            $entries[] = new LessonEntry(
+                title: $lesson->title,
+                url: Route::has('lessons.show')
+                    ? route('lessons.show', array_filter(['lesson' => $lesson->public_id, 'slug' => $lesson->slug]))
+                    : null,
+                author: $lesson->owner->name,
+                authorId: $lesson->owner_id,
+                locale: $locale,
+                versions: max(1, (int) $lesson->revisions_count),
+                primary: (bool) $lesson->getRelation('pivot')->getAttribute('is_primary'),
+                updatedAt: $lesson->headRevision->created_at ?? $lesson->updated_at,
+            );
+        }
+
+        $stats = new LessonStats(
+            lessons: count($entries),
+            teachers: count(array_unique(array_map(fn (LessonEntry $entry) => $entry->authorId, $entries))),
+            languages: count(array_unique(array_map(fn (LessonEntry $entry) => $entry->locale->code, $entries))),
+        );
+
+        return [TopicPageData::orderLessons($entries, $localeOrder), $stats];
     }
 
     /**
