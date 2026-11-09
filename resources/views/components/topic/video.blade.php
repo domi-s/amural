@@ -10,7 +10,7 @@
     $title = $artifact->title;
 @endphp
 
-<figure x-data="{ playing: false }">
+<figure x-data="externalMedia('youtube')">
     <div class="aspect-video overflow-hidden rounded-hand bg-tint">
         <template x-if="playing">
             <iframe
@@ -26,11 +26,21 @@
         <button
             type="button"
             x-show="! playing"
-            x-on:click="playing = true"
+            x-on:click="play()"
             aria-label="{{ __('Play video: :title', ['title' => $title]) }}"
             class="grid size-full place-items-center text-marker hover:bg-tint-2"
         >
             <x-icon.play class="{{ $large ? 'size-20' : 'size-14' }}" />
+        </button>
+    </div>
+
+    {{-- Shown when the video is played, sticking out of the bottom of the player, until someone says "Got it"
+         (remembered in this browser only, never in an account). --}}
+    <div x-show="notice" x-cloak role="status" class="relative z-10 -mt-3 ml-4 mr-4 flex items-start gap-3 rounded-hand-sm bg-marker py-3 pl-4 pr-2 text-sm leading-relaxed text-paper">
+        <p class="min-w-0 flex-1">{{ __(":provider is a US company, and this video isn't hosted on European servers. Playing it shares your IP address and device details with them.", ['provider' => 'YouTube']) }}</p>
+
+        <button type="button" x-on:click="dismissNotice()" aria-label="{{ __("Got it, don't show this again") }}" class="grid size-11 shrink-0 place-items-center rounded-hand-sm hover:bg-paper/15">
+            <x-icon name="close" size="size-4" />
         </button>
     </div>
 

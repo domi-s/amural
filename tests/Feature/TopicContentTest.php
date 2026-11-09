@@ -195,7 +195,7 @@ it('shows no thumbnail from YouTube, and loads the privacy-friendly player only 
 
     expect($html)->toContain('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1')
         ->toContain('aria-label="Play video: Fractions explained"')
-        ->toContain('x-on:click="playing = true"')
+        ->toContain('x-on:click="play()"')
         ->not->toContain('ytimg')
         ->not->toContain('https://www.youtube.com/embed')
         ->not->toContain('<img');
@@ -324,3 +324,28 @@ function queriesForContent(int $items): int
 
     return $count;
 }
+
+it('tells people a video is hosted outside Europe when they play it, and remembers when they dismiss that', function () {
+    artifactOn($this->topic, ['type' => ArtifactType::Youtube, 'youtube_id' => 'dQw4w9WgXcQ', 'title' => 'Fractions explained']);
+
+    $html = $this->get($this->url)->content();
+
+    // Alpine shows it only after a click; the remembered choice lives in this browser, not in an account.
+    expect($html)->toContain("x-data=\"externalMedia('youtube')\"")
+        ->toContain('x-show="notice"')
+        ->toContain('European servers')
+        ->toContain('x-on:click="dismissNotice()"');
+});
+
+it('says nothing about hosting on a topic with no external video', function () {
+    artifactOn($this->topic, ['type' => ArtifactType::Link, 'title' => 'Fraction games', 'url' => 'https://example.org/games']);
+
+    $this->get($this->url)->assertDontSee('externalMedia', false)->assertDontSee('European servers');
+});
+
+it('translates the notice', function () {
+    artifactOn($this->topic, ['type' => ArtifactType::Youtube, 'youtube_id' => 'dQw4w9WgXcQ']);
+
+    $this->get($this->url, ['Accept-Language' => 'ro'])->assertSee('nu este găzduit pe servere europene', false);
+    $this->get($this->url, ['Accept-Language' => 'es'])->assertSee('no está alojado en servidores europeos', false);
+});
