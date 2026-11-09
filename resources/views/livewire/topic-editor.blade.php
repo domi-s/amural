@@ -128,7 +128,7 @@ new #[Layout('components.layouts.public')] class extends Component {
     }
 }; ?>
 
-<main id="content" class="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6">
+<div>
     <p class="text-sm"><a href="{{ route('topic.show', $concept->public_id) }}" class="underline underline-offset-4">&larr; {{ __('Back to the topic') }}</a></p>
 
     <h1 class="mt-4 font-display text-4xl italic leading-tight">{{ __('Edit topic') }}</h1>
@@ -246,4 +246,4 @@ new #[Layout('components.layouts.public')] class extends Component {
             </div>
         </form>
     </div>
-</main>
+</div>
