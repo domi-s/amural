@@ -83,6 +83,11 @@
     /* Brand: two colours only. Marker on Paper. */
     --color-paper: #F6F1E7;
     --color-marker: #141414;
+    /* Topic page: filled shapes, their hover, and secondary text (6.3:1 on Paper). */
+    --color-tint: #ECE5D3;
+    --color-tint-2: #E2D8C1;
+    --color-muted: #5C574E;
+    --breakpoint-mag: 901px;
 
     --font-sans: var(--font-body);
     --font-display: 'Amural Display', var(--font-body);
@@ -211,6 +216,27 @@ select:focus[data-flux-control] {
 
 .europe-map .country:focus-visible {
     stroke-width: 4.5;
+}
+
+/* Topic page: soft, uneven corners (never a perfect rounded rectangle), the small-caps kicker, one focus ring. */
+@utility rounded-hand {
+    border-radius: 22px 30px 24px 28px / 28px 22px 30px 24px;
+}
+
+@utility rounded-hand-sm {
+    border-radius: 16px 22px 17px 21px / 21px 16px 22px 17px;
+}
+
+@utility kicker {
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
+.magazine :focus-visible {
+    outline: 2px solid var(--color-marker);
+    outline-offset: 3px;
 }
 
 /* The hand-drawn marks and logo graphics keep one pixel width however they are scaled. Opt in with .stroke-fixed:

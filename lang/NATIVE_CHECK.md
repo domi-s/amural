@@ -40,8 +40,22 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Skip to content`
 - `Log in`
 - `Register`
+- `Breadcrumb`
 - `This topic is deprecated.`
+- `Definition`
+- `No definition yet.`
 - `Untitled topic`
+- `Concept`
+- `Procedure`
+- `Result`
+- `Representation`
+- `Application`
+- `Early primary`
+- `Primary`
+- `Lower secondary`
+- `Upper secondary`
+- `Undergraduate`
+- `Graduate`
 - `This topic has been replaced`
 - `It was replaced by:`
 - `List`
@@ -53,7 +67,19 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Shaded: where :language is spoken`
 - `No language of this country is available yet.`
 - `Other languages spoken here are not available yet.`
+- `A definition`
+- `A concept`
+- `A procedure`
+- `A result`
+- `A representation`
+- `An application`
+- `:from to :to`
+- `Issue`
 - `First`
+- `Also known as :names.`
+- `Write one`
+- `In this issue`
+- `Edited by teachers`
 
 ## Romanian (ro) - TODO native check
 
@@ -90,8 +116,22 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Skip to content`
 - `Log in`
 - `Register`
+- `Breadcrumb`
 - `This topic is deprecated.`
+- `Definition`
+- `No definition yet.`
 - `Untitled topic`
+- `Concept`
+- `Procedure`
+- `Result`
+- `Representation`
+- `Application`
+- `Early primary`
+- `Primary`
+- `Lower secondary`
+- `Upper secondary`
+- `Undergraduate`
+- `Graduate`
 - `This topic has been replaced`
 - `It was replaced by:`
 - `List`
@@ -103,7 +143,19 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Shaded: where :language is spoken`
 - `No language of this country is available yet.`
 - `Other languages spoken here are not available yet.`
+- `A definition`
+- `A concept`
+- `A procedure`
+- `A result`
+- `A representation`
+- `An application`
+- `:from to :to`
+- `Issue`
 - `First`
+- `Also known as :names.`
+- `Write one`
+- `In this issue`
+- `Edited by teachers`
 
 ## Checked
 
