@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\ArtifactType;
+use App\Enums\Stage;
 use App\Models\Artifact;
 use App\Models\Concept;
 use App\Models\Locale;
@@ -81,3 +82,23 @@ it('gives no drop cap in Greek or Cyrillic, or for a letter the display font can
 });
 
 // The path
+
+it('writes the kicker stages in words and the filed-under ages as numbers', function () {
+    expect(TopicPageData::stageKicker(Stage::Primary, Stage::LowerSecondary))->toBe('Primary to lower secondary');
+    expect(TopicPageData::stageKicker(Stage::Primary, Stage::Primary))->toBe('Primary');
+    expect(TopicPageData::stageAges(Stage::Primary, Stage::LowerSecondary))->toBe('Ages 7 to 14');
+    expect(TopicPageData::stageAges(Stage::EarlyPrimary, Stage::EarlyPrimary))->toBe('Ages 4 to 7');
+});
+
+it('falls back to words for stages that are not tied to an age', function () {
+    expect(TopicPageData::stageAges(Stage::UpperSecondary, Stage::Undergraduate))->toBe('Upper secondary to undergraduate');
+    expect(TopicPageData::stageAges(Stage::Graduate, Stage::Graduate))->toBe('Graduate');
+});
+
+it('takes the age bands from the language files, so a country can change them', function () {
+    app()->setLocale('ro');
+
+    expect(TopicPageData::stageAges(Stage::Primary, Stage::LowerSecondary))->toBe('Vârsta 7 – 14 ani');
+});
+
+// The logo

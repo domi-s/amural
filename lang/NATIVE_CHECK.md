@@ -45,6 +45,7 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Definition`
 - `No definition yet.`
 - `Untitled topic`
+- `Mathematics`
 - `Concept`
 - `Procedure`
 - `Result`
@@ -58,6 +59,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Graduate`
 - `This topic has been replaced`
 - `It was replaced by:`
+- `History`
+- `Topic actions`
 - `List`
 - `Map`
 - `Choose by`
@@ -74,11 +77,27 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `A representation`
 - `An application`
 - `:from to :to`
+- `Ages :from to :to`
+- `stage.early_primary.from`
+- `stage.early_primary.to`
+- `stage.primary.from`
+- `stage.primary.to`
+- `stage.lower_secondary.from`
+- `stage.lower_secondary.to`
+- `stage.upper_secondary.from`
+- `stage.upper_secondary.to`
 - `Issue`
+- `Reading in`
+- `Not in :language yet.`
+- `(needs checking)`
+- `+ translate it`
+- `Filed under`
+- `Edit this topic`
 - `First`
 - `Also known as :names.`
 - `Write one`
 - `In this issue`
+- `About this topic`
 - `Edited by teachers`
 
 ## Romanian (ro) - TODO native check
@@ -121,6 +140,7 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Definition`
 - `No definition yet.`
 - `Untitled topic`
+- `Mathematics`
 - `Concept`
 - `Procedure`
 - `Result`
@@ -134,6 +154,8 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Graduate`
 - `This topic has been replaced`
 - `It was replaced by:`
+- `History`
+- `Topic actions`
 - `List`
 - `Map`
 - `Choose by`
@@ -150,11 +172,27 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `A representation`
 - `An application`
 - `:from to :to`
+- `Ages :from to :to`
+- `stage.early_primary.from`
+- `stage.early_primary.to`
+- `stage.primary.from`
+- `stage.primary.to`
+- `stage.lower_secondary.from`
+- `stage.lower_secondary.to`
+- `stage.upper_secondary.from`
+- `stage.upper_secondary.to`
 - `Issue`
+- `Reading in`
+- `Not in :language yet.`
+- `(needs checking)`
+- `+ translate it`
+- `Filed under`
+- `Edit this topic`
 - `First`
 - `Also known as :names.`
 - `Write one`
 - `In this issue`
+- `About this topic`
 - `Edited by teachers`
 
 ## Checked

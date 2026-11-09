@@ -12,13 +12,20 @@ final readonly class TopicPage
 {
     /**
      * @param  list<string>  $altNames
+     * @param  list<TopicLink>  $filedUnder  The chain of broader topics, from the top down.
+     * @param  list<LanguageChip>  $languages  The languages the topic has a name in, in the visitor's order.
      */
     public function __construct(
         public Concept $concept,
         public ResolvedLabel $label,
         public ?Locale $shownLocale,
+        public ?Locale $requestedLocale,
         public array $altNames,
         public string $kicker,
+        public string $ages,
+        public ?TopicLink $issue,
+        public array $filedUnder,
+        public array $languages,
     ) {}
 
     /**
