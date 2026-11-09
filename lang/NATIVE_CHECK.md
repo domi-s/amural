@@ -132,9 +132,45 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Add it`
 - `Sources`
 - `About this topic`
+- `What would you like to learn today, :name?`
+- `What are we working on, :name?`
+- `Stuck on something, :name?`
+- `Where shall we start, :name?`
+- `What would you like to learn today?`
+- `What are we working on?`
+- `Stuck on something?`
+- `Where shall we start?`
+- `Find a lesson`
+- `Find exercises`
+- `Guide me`
+- `What do you need to teach or learn? For example: adding fractions with unlike denominators, ages 10 to 12`
+- `What do you want to practise? For example: 15 questions on solving linear equations`
+- `Tell us the problem you're stuck on, and what you've tried so far.`
+- `We search the lessons teachers have shared and show you the best ones, in your language.`
+- `We find exercises at the right level, and can put a set together for you.`
+- `Hints, not answers. We ask questions and point the way, so you work it out yourself.`
+- `Adding fractions with different denominators`
+- `How plants make food, ages 9 to 11`
+- `The causes of the First World War`
+- `Solving linear equations, easy to hard`
+- `Past tense verbs, ten questions`
+- `Reading a bar chart`
+- `I don't get why you flip the second fraction when dividing`
+- `I solved 3x + 5 = 20 and got x = 8`
+- `How do I start an essay on the French Revolution?`
+- `How can we help?`
+- `Ask the tutor`
+- `Send`
+- `Try`
+- `The tutor isn't open yet, but this is where you'll ask. Meanwhile, browse the topics below.`
 - `:provider is a US company, and this video isn't hosted on European servers. Playing it shares your IP address and device details with them.`
 - `Got it, don't show this again`
 - `Edited by teachers`
+- `Ask questions, get answers and exercise what you've learned`
+- `Follow all exercises and animations for the most effective learning`
+- `Doesn't solve it for you`
+- `Yes`
+- `No`
 
 ## Romanian (ro) - TODO native check
 
@@ -263,9 +299,45 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Add it`
 - `Sources`
 - `About this topic`
+- `What would you like to learn today, :name?`
+- `What are we working on, :name?`
+- `Stuck on something, :name?`
+- `Where shall we start, :name?`
+- `What would you like to learn today?`
+- `What are we working on?`
+- `Stuck on something?`
+- `Where shall we start?`
+- `Find a lesson`
+- `Find exercises`
+- `Guide me`
+- `What do you need to teach or learn? For example: adding fractions with unlike denominators, ages 10 to 12`
+- `What do you want to practise? For example: 15 questions on solving linear equations`
+- `Tell us the problem you're stuck on, and what you've tried so far.`
+- `We search the lessons teachers have shared and show you the best ones, in your language.`
+- `We find exercises at the right level, and can put a set together for you.`
+- `Hints, not answers. We ask questions and point the way, so you work it out yourself.`
+- `Adding fractions with different denominators`
+- `How plants make food, ages 9 to 11`
+- `The causes of the First World War`
+- `Solving linear equations, easy to hard`
+- `Past tense verbs, ten questions`
+- `Reading a bar chart`
+- `I don't get why you flip the second fraction when dividing`
+- `I solved 3x + 5 = 20 and got x = 8`
+- `How do I start an essay on the French Revolution?`
+- `How can we help?`
+- `Ask the tutor`
+- `Send`
+- `Try`
+- `The tutor isn't open yet, but this is where you'll ask. Meanwhile, browse the topics below.`
 - `:provider is a US company, and this video isn't hosted on European servers. Playing it shares your IP address and device details with them.`
 - `Got it, don't show this again`
 - `Edited by teachers`
+- `Ask questions, get answers and exercise what you've learned`
+- `Follow all exercises and animations for the most effective learning`
+- `Doesn't solve it for you`
+- `Yes`
+- `No`
 
 ## Checked
 

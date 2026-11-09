@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Support\BuildTopicsIndex;
+use App\Support\TutorBar;
 use Illuminate\Contracts\View\View;
 
 /**
@@ -12,6 +13,10 @@ class ShowTopics
 {
     public function __invoke(BuildTopicsIndex $build): View
     {
-        return view('topics.index', ['index' => $build->execute()]);
+        return view('topics.index', [
+            'index' => $build->execute(),
+            'tutorHeadline' => TutorBar::headline(auth()->user()?->first_name, now()->dayOfYear),
+            'tutorModes' => TutorBar::modes(),
+        ]);
     }
 }
