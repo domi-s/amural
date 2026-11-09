@@ -2,14 +2,15 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Database\Factories\LocaleFactory;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
 class Locale extends Model
 {
-    /** @use HasFactory<\Database\Factories\LocaleFactory> */
+    /** @use HasFactory<LocaleFactory> */
     use HasFactory;
 
     protected $primaryKey = 'code';

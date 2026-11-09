@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Concerns\AppendOnly;
 use App\Models\Concerns\HasPublicId;
+use Database\Factories\RevisionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,10 +14,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Revision extends Model
 {
-    /** @use HasFactory<\Database\Factories\RevisionFactory> */
-    use HasFactory;
-
     use AppendOnly, HasPublicId;
+
+    /** @use HasFactory<RevisionFactory> */
+    use HasFactory;
 
     public const UPDATED_AT = null;
 

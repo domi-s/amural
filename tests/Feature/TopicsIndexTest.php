@@ -8,6 +8,7 @@ use App\Enums\EdgeType;
 use App\Enums\LabelStatus;
 use App\Enums\LessonStatus;
 use App\Models\Concept;
+use App\Models\User;
 use Database\Factories\ConceptFactory;
 use Database\Factories\LessonFactory;
 use Database\Seeders\CountrySeeder;
@@ -204,7 +205,7 @@ it('makes the same number of queries however many topics there are', function ()
 // The tutor bar
 
 it('has a tutor bar above the topics, greeting a signed-in visitor by first name', function () {
-    $user = App\Models\User::factory()->create(['first_name' => 'Maria']);
+    $user = User::factory()->create(['first_name' => 'Maria']);
 
     $html = $this->actingAs($user)->get('/topics')->assertOk()->content();
 
@@ -250,8 +251,8 @@ it('translates the tutor bar', function () {
 it('explains what the tutor does and does not do', function () {
     $html = $this->get('/topics')->assertOk()->content();
 
-    expect($html)->toContain("Ask questions, get answers and exercise what you&#039;ve learned")
+    expect($html)->toContain('Ask questions, get answers and exercise what you&#039;ve learned')
         ->toContain('Follow all exercises and animations for the most effective learning')
-        ->toContain("Doesn&#039;t solve it for you")
+        ->toContain('Doesn&#039;t solve it for you')
         ->toContain('aria-label="Yes"')->toContain('aria-label="No"');
 });

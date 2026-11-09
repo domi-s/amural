@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Models\UserContentLocale;
 use Database\Factories\UserFactory;
 use Database\Seeders\LocaleSeeder;
+use Illuminate\Database\QueryException;
 
 it('builds the full name in the database from first and last name', function () {
     $user = UserFactory::new()->create(['first_name' => 'Ana', 'last_name' => 'Popescu']);
@@ -53,5 +54,5 @@ it('allows a locale only once per user', function () {
     UserContentLocale::create(['user_id' => $user->id, 'locale_code' => 'ro-RO', 'position' => 0]);
 
     expect(fn () => UserContentLocale::create(['user_id' => $user->id, 'locale_code' => 'ro-RO', 'position' => 1]))
-        ->toThrow(\Illuminate\Database\QueryException::class);
+        ->toThrow(QueryException::class);
 });

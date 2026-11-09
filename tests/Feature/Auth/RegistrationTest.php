@@ -2,7 +2,11 @@
 
 namespace Tests\Feature\Auth;
 
+use App\Models\User;
+use App\Support\LocaleResolver;
+use Database\Seeders\LocaleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
 use Livewire\Volt\Volt;
 use Tests\TestCase;
 
@@ -19,7 +23,7 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_can_register(): void
     {
-        $this->seed(\Database\Seeders\LocaleSeeder::class);
+        $this->seed(LocaleSeeder::class);
 
         $response = Volt::test('auth.register')
             ->set('first_name', 'Test')
@@ -38,7 +42,7 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_start_in_english_when_the_browser_gives_no_preference(): void
     {
-        $this->seed(\Database\Seeders\LocaleSeeder::class);
+        $this->seed(LocaleSeeder::class);
 
         Volt::test('auth.register')
             ->set('first_name', 'Test')
@@ -49,7 +53,7 @@ class RegistrationTest extends TestCase
             ->call('register')
             ->assertHasNoErrors();
 
-        $user = \App\Models\User::where('email', 'test@example.com')->firstOrFail();
+        $user = User::where('email', 'test@example.com')->firstOrFail();
 
         $this->assertSame('en-GB', $user->interface_locale);
         $this->assertSame(['en-GB'], $user->contentLocales()->pluck('locale_code')->all());
@@ -57,14 +61,14 @@ class RegistrationTest extends TestCase
 
     public function test_new_users_start_in_the_language_their_browser_asks_for(): void
     {
-        $this->seed(\Database\Seeders\LocaleSeeder::class);
+        $this->seed(LocaleSeeder::class);
 
         // The Livewire test harness builds its own request for the component call, so hand the
         // resolver the request a Romanian browser would send.
-        $request = \Illuminate\Http\Request::create('/register', 'GET', [], [], [], [
+        $request = Request::create('/register', 'GET', [], [], [], [
             'HTTP_ACCEPT_LANGUAGE' => 'ro-RO,ro;q=0.9,en;q=0.8',
         ]);
-        $this->app->instance(\App\Support\LocaleResolver::class, new \App\Support\LocaleResolver($request));
+        $this->app->instance(LocaleResolver::class, new LocaleResolver($request));
 
         Volt::test('auth.register')
             ->set('first_name', 'Ana')
@@ -75,7 +79,7 @@ class RegistrationTest extends TestCase
             ->call('register')
             ->assertHasNoErrors();
 
-        $user = \App\Models\User::where('email', 'ana@example.com')->firstOrFail();
+        $user = User::where('email', 'ana@example.com')->firstOrFail();
 
         $this->assertSame('ro-RO', $user->interface_locale);
         $this->assertSame(['ro-RO'], $user->contentLocales()->pluck('locale_code')->all());

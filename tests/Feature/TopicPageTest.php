@@ -9,6 +9,7 @@ use App\Enums\EdgeStrength;
 use App\Enums\EdgeType;
 use App\Enums\LabelStatus;
 use App\Enums\Stage;
+use App\Livewire\LanguageSwitcher;
 use App\Models\Concept;
 use App\Models\ConceptEdge;
 use Database\Factories\ConceptFactory;
@@ -167,7 +168,7 @@ it('has one main heading, a skip link and a header without a language switcher o
 
     expect(substr_count($html, '<h1'))->toBe(1);
     expect($html)->toContain('href="#content"')->not->toContain('aria-label="Breadcrumb"')->not->toContain('border-b border-marker');
-    $response->assertDontSeeLivewire(App\Livewire\LanguageSwitcher::class);
+    $response->assertDontSeeLivewire(LanguageSwitcher::class);
     // No flags on this page: language is a quiet setting in the margin.
     expect($html)->not->toContain('flag"');
 });
