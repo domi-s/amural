@@ -1,7 +1,11 @@
 <?php
 
+use App\Actions\Concepts\UpdateConcept;
 use App\Actions\Concepts\UpdateConceptLabel;
+use App\Enums\ConceptKind;
+use App\Enums\ConceptStatus;
 use App\Enums\LabelStatus;
+use App\Enums\Stage;
 use App\Models\Concept;
 use App\Models\Locale;
 use App\Support\LocaleResolver;
@@ -32,12 +36,23 @@ new #[Layout('components.layouts.public')] class extends Component {
     /** 'saved' or 'unchanged' after pressing save. */
     public ?string $result = null;
 
+    // What the topic is: curators set these on the default language's editor.
+    public string $kind = '';
+    public string $stageFrom = '';
+    public string $stageTo = '';
+    public string $conceptStatus = '';
+    public bool $detailsSaved = false;
+
     public function mount(Concept $concept, string $locale, LocaleResolver $resolver): void
     {
         abort_unless(Locale::query()->whereKey($locale)->exists(), 404);
 
         $this->concept = $concept;
         $this->locale = $locale;
+        $this->kind = $concept->kind->value;
+        $this->stageFrom = $concept->stage_from->value;
+        $this->stageTo = $concept->stage_to->value;
+        $this->conceptStatus = $concept->status->value;
 
         $label = $concept->labels()->where('locale_code', $locale)->first();
         $this->pref = $label->pref ?? '';
@@ -86,6 +101,18 @@ new #[Layout('components.layouts.public')] class extends Component {
         $this->note = '';
     }
 
+    public function saveDetails(UpdateConcept $update): void
+    {
+        $update->execute($this->concept, Auth::user(), [
+            'kind' => $this->kind,
+            'stage_from' => $this->stageFrom,
+            'stage_to' => $this->stageTo,
+            'status' => $this->conceptStatus,
+        ]);
+
+        $this->detailsSaved = true;
+    }
+
     public function rendering(View $view): void
     {
         $view->title(__('Edit topic'));
@@ -124,6 +151,10 @@ new #[Layout('components.layouts.public')] class extends Component {
                 default => null,
             },
             'canReview' => Auth::user()->isCurator(),
+            'showDetails' => Auth::user()->isCurator() && $this->locale === LocaleResolver::DEFAULT,
+            'kinds' => ConceptKind::cases(),
+            'stages' => Stage::cases(),
+            'conceptStatuses' => array_filter(ConceptStatus::cases(), fn (ConceptStatus $status) => $status !== ConceptStatus::Deprecated),
         ];
     }
 }; ?>
@@ -246,4 +277,53 @@ new #[Layout('components.layouts.public')] class extends Component {
             </div>
         </form>
     </div>
+
+    @if ($showDetails)
+        <form wire:submit="saveDetails" class="mt-10 flex max-w-xl flex-col gap-5 border-t border-marker pt-8">
+            <h2 class="text-sm font-medium">{{ __('About the topic') }}</h2>
+
+            <label class="block">
+                <span class="text-sm font-medium">{{ __('Kind') }}</span>
+                <select wire:model="kind" class="mt-1 w-full border border-marker bg-paper px-3 py-2">
+                    @foreach ($kinds as $option)
+                        <option value="{{ $option->value }}">{{ $option->label() }}</option>
+                    @endforeach
+                </select>
+            </label>
+
+            <div class="grid gap-5 sm:grid-cols-2">
+                <label class="block">
+                    <span class="text-sm font-medium">{{ __('First stage') }}</span>
+                <select wire:model="stageFrom" class="mt-1 w-full border border-marker bg-paper px-3 py-2">
+                    @foreach ($stages as $option)
+                        <option value="{{ $option->value }}">{{ $option->label() }}</option>
+                    @endforeach
+                </select>
+                </label>
+                <label class="block">
+                    <span class="text-sm font-medium">{{ __('Last stage') }}</span>
+                <select wire:model="stageTo" class="mt-1 w-full border border-marker bg-paper px-3 py-2">
+                    @foreach ($stages as $option)
+                        <option value="{{ $option->value }}">{{ $option->label() }}</option>
+                    @endforeach
+                </select>
+                    @error('stage_to') <span class="mt-1 block text-sm font-medium">{{ $message }}</span> @enderror
+                </label>
+            </div>
+
+            <label class="block">
+                <span class="text-sm font-medium">{{ __('Status') }}</span>
+                <select wire:model="conceptStatus" class="mt-1 w-full border border-marker bg-paper px-3 py-2">
+                    @foreach ($conceptStatuses as $option)
+                        <option value="{{ $option->value }}">{{ $option->label() }}</option>
+                    @endforeach
+                </select>
+            </label>
+
+            <div class="flex items-center gap-4">
+                <button type="submit" class="border border-marker bg-marker px-5 py-2.5 font-medium text-paper hover:bg-paper hover:text-marker focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-marker">{{ __('Save') }}</button>
+                <p role="status" class="text-sm">@if ($detailsSaved) {{ __('Saved.') }} @endif</p>
+            </div>
+        </form>
+    @endif
 </div>

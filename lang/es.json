@@ -196,5 +196,13 @@
     "Nothing is waiting to be checked.": "No hay nada pendiente de revisión.",
     "All languages": "Todos los idiomas",
     "Updated :date": "Actualizado el :date",
-    "Review": "Revisar"
+    "Review": "Revisar",
+    "About the topic": "Sobre el tema",
+    "Kind": "Tipo",
+    "First stage": "Primera etapa",
+    "Last stage": "Última etapa",
+    "Status": "Estado",
+    "Machine proposed": "Propuesto por máquina",
+    "Deprecated": "Obsoleto",
+    "The last stage cannot come before the first.": "La última etapa no puede ir antes que la primera."
 }

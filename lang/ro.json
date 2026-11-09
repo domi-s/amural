@@ -196,5 +196,13 @@
     "Nothing is waiting to be checked.": "Nimic nu așteaptă verificarea.",
     "All languages": "Toate limbile",
     "Updated :date": "Actualizat la :date",
-    "Review": "Verifică"
+    "Review": "Verifică",
+    "About the topic": "Despre subiect",
+    "Kind": "Tip",
+    "First stage": "Prima etapă",
+    "Last stage": "Ultima etapă",
+    "Status": "Stare",
+    "Machine proposed": "Propus automat",
+    "Deprecated": "Învechit",
+    "The last stage cannot come before the first.": "Ultima etapă nu poate fi înaintea primei."
 }

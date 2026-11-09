@@ -196,5 +196,13 @@
     "Nothing is waiting to be checked.": "Nothing is waiting to be checked.",
     "All languages": "All languages",
     "Updated :date": "Updated :date",
-    "Review": "Review"
+    "Review": "Review",
+    "About the topic": "About the topic",
+    "Kind": "Kind",
+    "First stage": "First stage",
+    "Last stage": "Last stage",
+    "Status": "Status",
+    "Machine proposed": "Machine proposed",
+    "Deprecated": "Deprecated",
+    "The last stage cannot come before the first.": "The last stage cannot come before the first."
 }

@@ -205,6 +205,14 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `All languages`
 - `Updated :date`
 - `Review`
+- `About the topic`
+- `Kind`
+- `First stage`
+- `Last stage`
+- `Status`
+- `Machine proposed`
+- `Deprecated`
+- `The last stage cannot come before the first.`
 
 ## Romanian (ro) - TODO native check
 
@@ -406,6 +414,14 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `All languages`
 - `Updated :date`
 - `Review`
+- `About the topic`
+- `Kind`
+- `First stage`
+- `Last stage`
+- `Status`
+- `Machine proposed`
+- `Deprecated`
+- `The last stage cannot come before the first.`
 
 ## Checked
 
