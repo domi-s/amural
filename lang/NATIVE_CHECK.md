@@ -36,6 +36,7 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Move down`
 - `At least one language must remain.`
 - `:country flag`
+- `:language flag`
 
 ## Romanian (ro) - TODO native check
 
@@ -68,6 +69,7 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Move down`
 - `At least one language must remain.`
 - `:country flag`
+- `:language flag`
 
 ## Checked
 

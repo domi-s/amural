@@ -132,7 +132,8 @@ new #[Layout('components.layouts.app')] class extends Component {
 
         <flux:textarea wire:model="bio" :label="__('Bio')" rows="4" maxlength="1000" />
 
-        <flux:select wire:model="country_code" :label="__('Country')">
+        <div class="flex items-end gap-4">
+        <flux:select wire:model.live="country_code" :label="__('Country')" class="flex-1">
             <flux:select.option value="">{{ __('Choose a country') }}</flux:select.option>
             @foreach ($countries as $country)
                 <flux:select.option value="{{ $country->code }}">
@@ -140,6 +141,11 @@ new #[Layout('components.layouts.app')] class extends Component {
                 </flux:select.option>
             @endforeach
         </flux:select>
+
+            @if ($country_code !== '')
+                <x-flag :country="$country_code" size="lg" class="mb-1" />
+            @endif
+        </div>
 
         <fieldset>
             <legend class="mb-2 text-sm font-medium">{{ __('Avatar') }}</legend>
@@ -184,10 +190,7 @@ new #[Layout('components.layouts.app')] class extends Component {
                             @checked($locale->code === $currentInterface)
                             class="size-4"
                         />
-                        <span lang="{{ $locale->language }}" class="font-medium">{{ $locale->display_name }}</span>
-                        @if ($locale->english_name !== $locale->native_name)
-                            <span class="text-sm opacity-70">{{ $locale->english_name }}</span>
-                        @endif
+                        <x-language-label :locale="$locale" size="md" />
                     </label>
                 @endforeach
             </div>
@@ -215,12 +218,7 @@ new #[Layout('components.layouts.app')] class extends Component {
                     >
                         <span x-sort:handle class="cursor-grab select-none opacity-60" aria-hidden="true">&#8942;&#8942;</span>
                         <span class="w-5 text-sm opacity-60">{{ $loop->iteration }}</span>
-                        <span class="flex-1">
-                            <span lang="{{ $locale->language }}" class="font-medium">{{ $locale->display_name }}</span>
-                            @if ($locale->english_name !== $locale->native_name)
-                                <span class="text-sm opacity-70">{{ $locale->english_name }}</span>
-                            @endif
-                        </span>
+                        <x-language-label :locale="$locale" size="md" class="flex-1" />
 
                         <flux:button size="sm" variant="ghost" icon="chevron-up" :aria-label="__('Move up')" :disabled="$loop->first" wire:click="moveContentLocale('{{ $code }}', {{ $loop->index - 1 }})" />
                         <flux:button size="sm" variant="ghost" icon="chevron-down" :aria-label="__('Move down')" :disabled="$loop->last" wire:click="moveContentLocale('{{ $code }}', {{ $loop->index + 1 }})" />
