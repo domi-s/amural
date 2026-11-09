@@ -5,7 +5,7 @@ namespace App\Support;
 use App\Enums\Stage;
 
 /**
- * The choices the topic page makes about its content. Pure functions with no database
+ * The choices the topic page makes about its content: which word to circle. Pure functions with no database
  * or view in them, so each rule can be tested on its own.
  */
 final class TopicPageData
@@ -64,5 +64,21 @@ final class TopicPageData
         return $from === $to
             ? $from->label()
             : __(':from to :to', ['from' => $from->label(), 'to' => mb_strtolower($to->label())]);
+    }
+
+    /**
+     * "Ages 9 to 13" when the stages have ages (from the language files), otherwise the stages
+     * in words.
+     */
+    public static function stageAges(Stage $from, Stage $to): string
+    {
+        $start = $from->ages();
+        $end = $to->ages();
+
+        if ($start !== null && $end !== null) {
+            return __('Ages :from to :to', ['from' => $start['from'], 'to' => $end['to']]);
+        }
+
+        return self::stageKicker($from, $to);
     }
 }

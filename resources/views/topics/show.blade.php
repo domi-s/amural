@@ -1,6 +1,18 @@
-<x-layouts.topic :title="$page->name()">
+<x-layouts.topic :title="$page->name()" :issue="$page->issue">
     <article class="mx-auto max-w-[1240px] px-5 pb-16 pt-10 sm:px-10 mag:pt-14">
-        <x-topic.title :page="$page" />
+        <div class="grid gap-x-14 mag:grid-cols-[180px_1fr]">
+            <div class="mag:col-start-2 mag:row-start-1">
+                <x-topic.title :page="$page" />
+            </div>
+
+            {{-- Under the title on a phone; in the left margin from 901px. --}}
+            <div class="mt-10 mag:col-start-1 mag:row-span-2 mag:row-start-1 mag:mt-3 mag:self-start">
+                <x-topic.margin :page="$page" />
+            </div>
+
+            <div class="mag:col-start-2 mag:row-start-2">
+            </div>
+        </div>
 
         <footer class="mt-24">
             @php($tagline = __('Lessons, shared across Europe.'))

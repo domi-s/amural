@@ -173,6 +173,94 @@ it('has one main heading, a skip link and a header without a language switcher o
 
 // The margin: reading in
 
+it('lists only the languages the topic has a name in, in the visitor\'s order, with the current one pressed', function () {
+    $topic = pageTopic(['en-GB' => 'Fractions', 'ro-RO' => 'Fracții', 'de-DE' => 'Brüche']);
+
+    $html = $this->get(topicUrl($topic, 'fractii', '?lang=ro-RO'))->content();
+    $margin = substr($html, strpos($html, 'id="reading-in"'), 2500);
+
+    expect($margin)->toMatch('/aria-pressed="true"[^>]*>\s*Română|Română.*aria-pressed/s');
+    expect(strpos($margin, 'Română'))->toBeLessThan(strpos($margin, 'English'));
+    expect($margin)->not->toContain('Español')->not->toContain('Polski');
+    expect(substr_count($margin, 'aria-pressed="true"'))->toBe(1);
+    expect(substr_count($margin, '<button'))->toBe(3);
+});
+
+it('makes each language a button that sends ?lang= to the right slug', function () {
+    $topic = pageTopic(['en-GB' => 'Fractions', 'ro-RO' => 'Fracții']);
+
+    $html = $this->get(topicUrl($topic, 'fractions'))->content();
+
+    expect($html)->toContain('formaction="'.url("/topic/{$topic->public_id}/fractii").'"')
+        ->toContain('name="lang"')
+        ->toContain('value="ro-RO"')
+        ->toContain('lang="ro"');
+});
+
+it('keeps a draft or machine name marked as needing checking, and nothing else', function () {
+    $topic = pageTopic([
+        'en-GB' => 'Fractions',
+        'es-ES' => ['Fracciones', LabelStatus::Draft],
+        'ro-RO' => ['Fracții', LabelStatus::Machine],
+    ]);
+
+    $html = $this->get(topicUrl($topic, 'fractions'))->content();
+
+    expect(substr_count($html, '(needs checking)'))->toBe(2);
+});
+
+it('says when the name is not yet in the visitor\'s language, and offers a translation only when the editor exists', function () {
+    $topic = pageTopic(['en-GB' => 'Fractions']);
+
+    $this->get(topicUrl($topic, 'fractions', '?lang=ro-RO'))->assertSee('Not in Română yet.')->assertDontSee('+ translate it');
+
+    Route::get('/topic/{concept}/edit/{locale}', fn () => 'edit')->name('topic.edit');
+    Route::getRoutes()->refreshNameLookups();
+
+    $this->get(topicUrl($topic, 'fractions', '?lang=ro-RO'))->assertSee('+ translate it')->assertSee("/topic/{$topic->public_id}/edit/ro-RO", false);
+});
+
+it('does not say that when the name is in the first-choice language', function () {
+    $topic = pageTopic(['en-GB' => 'Fractions', 'ro-RO' => 'Fracții']);
+
+    $this->get(topicUrl($topic, 'fractii', '?lang=ro-RO'))->assertDontSee('Not in');
+});
+
+// The margin: filed under
+
+it('files the topic under its subject, its chain of broader topics and the ages it is for', function () {
+    $number = pageTopic(['en-GB' => 'Number']);
+    $fractions = pageTopic(['en-GB' => 'Fractions']);
+    $adding = pageTopic(['en-GB' => 'Adding fractions'], ['stage_from' => Stage::Primary, 'stage_to' => Stage::LowerSecondary]);
+
+    pageEdge($fractions, $number, EdgeType::Broader);
+    pageEdge($adding, $fractions, EdgeType::Broader);
+
+    $html = $this->get(topicUrl($adding, 'adding-fractions'))->content();
+
+    expect($html)->toContain('Filed under')->toContain('Mathematics')->toContain('Ages 7 to 14');
+    expect($html)->toMatch('/Mathematics.*>Number<\/a>,\s*<a[^>]*>Fractions<\/a>.*Ages 7 to 14/s');
+    // The first parent is the "issue" in the header.
+    expect($html)->toMatch('/Issue:\s*<a[^>]*>Fractions<\/a>/s');
+});
+
+it('stops following broader topics round a loop', function () {
+    $a = pageTopic(['en-GB' => 'Topic A']);
+    $b = pageTopic(['en-GB' => 'Topic B']);
+    pageEdge($a, $b, EdgeType::Broader);
+    pageEdge($b, $a, EdgeType::Broader);
+
+    $this->get(topicUrl($a, 'topic-a'))->assertOk();
+});
+
+it('shows stages without ages in words', function () {
+    $topic = pageTopic(['en-GB' => 'Topology'], ['stage_from' => Stage::Undergraduate, 'stage_to' => Stage::Graduate]);
+
+    $this->get(topicUrl($topic, 'topology'))->assertSee('Undergraduate to graduate');
+});
+
+// The path
+
 function queriesForTopicWith(int $neighbours): int
 {
     $topic = pageTopic(['en-GB' => "Hub {$neighbours}", 'ro-RO' => "Nod {$neighbours}", 'es-ES' => "Centro {$neighbours}"]);

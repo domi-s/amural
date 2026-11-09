@@ -35,4 +35,20 @@ enum Stage: string
             self::Graduate => 5,
         };
     }
+
+    /**
+     * The ages a stage starts and ends at, from the language files because school systems differ
+     * by country. Null for the stages that are not tied to an age.
+     *
+     * @return array{from: string, to: string}|null
+     */
+    public function ages(): ?array
+    {
+        $from = __("stage.{$this->value}.from");
+        $to = __("stage.{$this->value}.to");
+
+        return $from === "stage.{$this->value}.from" || $to === "stage.{$this->value}.to"
+            ? null
+            : ['from' => $from, 'to' => $to];
+    }
 }
