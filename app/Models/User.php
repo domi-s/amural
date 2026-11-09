@@ -13,6 +13,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
 
+/**
+ * @property UserRole $role
+ */
 class User extends Authenticatable // implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
@@ -76,6 +79,12 @@ class User extends Authenticatable // implements MustVerifyEmail
     public function publicIdPrefix(): string
     {
         return 'u';
+    }
+
+    /** Curators and admins decide what is reviewed. */
+    public function isCurator(): bool
+    {
+        return in_array($this->role, [UserRole::Curator, UserRole::Admin], true);
     }
 
     /**

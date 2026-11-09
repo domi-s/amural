@@ -14,6 +14,10 @@ use Illuminate\Support\Str;
 /**
  * Writes a concept's name and definition in one locale. Every real change becomes one
  * append-only revision; a no-op writes nothing.
+ *
+ * Unless the caller sets the status itself (imports and seeders), an edit is a draft:
+ * only a curator who marks it reviewed makes it reviewed, so a teacher's edit to a
+ * reviewed name puts it back in the queue.
  */
 class UpdateConceptLabel
 {
@@ -27,9 +31,10 @@ class UpdateConceptLabel
         ?User $author = null,
         ?LabelStatus $status = null,
         ?string $note = null,
+        bool $markReviewed = false,
     ): ConceptLabel {
         $data = $this->validated($data);
-        $status ??= LabelStatus::Draft;
+        $status ??= $markReviewed && $author?->isCurator() ? LabelStatus::Reviewed : LabelStatus::Draft;
 
         return DB::transaction(function () use ($concept, $localeCode, $data, $author, $status, $note) {
             $label = ConceptLabel::query()
