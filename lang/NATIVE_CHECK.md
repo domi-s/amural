@@ -191,6 +191,14 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Write this in :script.`
 - `No name yet. Add one.`
 - `Needs checking`
+- `Imported`
+- `Draft`
+- `Machine`
+- `Current version`
+- `This topic has no name in any language yet.`
+- `Restore this version`
+- `Restore this version? It is added as a new version; nothing is lost.`
+- `Restored the version of :date`
 
 ## Romanian (ro) - TODO native check
 
@@ -378,6 +386,14 @@ listed in one section or the other, so nothing is added unreviewed by accident.
 - `Write this in :script.`
 - `No name yet. Add one.`
 - `Needs checking`
+- `Imported`
+- `Draft`
+- `Machine`
+- `Current version`
+- `This topic has no name in any language yet.`
+- `Restore this version`
+- `Restore this version? It is added as a new version; nothing is lost.`
+- `Restored the version of :date`
 
 ## Checked
 

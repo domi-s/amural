@@ -17,6 +17,8 @@ Volt::route('/topic/{concept:public_id}/edit/{locale}', 'topic-editor')
     ->middleware('auth')
     ->name('topic.edit');
 
+Volt::route('/topic/{concept:public_id}/history', 'topic-history')->name('topic.history');
+
 Route::get('/topic/{concept:public_id}/{slug?}', ShowTopic::class)
     ->where('slug', '[A-Za-z0-9._-]+')
     ->name('topic.show');

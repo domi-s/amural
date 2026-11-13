@@ -182,5 +182,13 @@
     "Cyrillic script": "Cyrillic script",
     "Write this in :script.": "Write this in :script.",
     "No name yet. Add one.": "No name yet. Add one.",
-    "Needs checking": "Needs checking"
+    "Needs checking": "Needs checking",
+    "Imported": "Imported",
+    "Draft": "Draft",
+    "Machine": "Machine",
+    "Current version": "Current version",
+    "This topic has no name in any language yet.": "This topic has no name in any language yet.",
+    "Restore this version": "Restore this version",
+    "Restore this version? It is added as a new version; nothing is lost.": "Restore this version? It is added as a new version; nothing is lost.",
+    "Restored the version of :date": "Restored the version of :date"
 }
