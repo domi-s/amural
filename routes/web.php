@@ -12,6 +12,11 @@ Route::get('/', function () {
 // Public: anyone can browse topics and read one in their own language.
 Route::get('/topics', ShowTopics::class)->name('topics.index');
 
+Volt::route('/topic/{concept:public_id}/edit/{locale}', 'topic-editor')
+    ->where('locale', '[A-Za-z]{2,3}(-[A-Za-z0-9]+)?')
+    ->middleware('auth')
+    ->name('topic.edit');
+
 Route::get('/topic/{concept:public_id}/{slug?}', ShowTopic::class)
     ->where('slug', '[A-Za-z0-9._-]+')
     ->name('topic.show');

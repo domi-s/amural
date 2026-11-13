@@ -17,7 +17,6 @@ use Database\Seeders\CountrySeeder;
 use Database\Seeders\LocaleSeeder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Route;
 
 beforeEach(function () {
     $this->seed([LocaleSeeder::class, CountrySeeder::class]);
@@ -110,15 +109,10 @@ it('ends the definition with the other names', function () {
         ->assertSeeHtml('Also known as <em>fraction addition</em>, <em>summing fractions</em>.');
 });
 
-it('says there is no definition yet, with a link to write one only when the editor exists', function () {
+it('says there is no definition yet, with a link to write one', function () {
     $topic = pageTopic(['en-GB' => 'Decimals']);
 
-    $this->get(topicUrl($topic, 'decimals'))->assertSee('No definition yet.')->assertDontSee('Write one');
-
-    Route::get('/topic/{concept}/edit/{locale}', fn () => 'edit')->name('topic.edit');
-    Route::getRoutes()->refreshNameLookups();
-
-    $this->get(topicUrl($topic, 'decimals'))->assertSee('Write one')->assertSee("/topic/{$topic->public_id}/edit/en-GB", false);
+    $this->get(topicUrl($topic, 'decimals'))->assertSee('No definition yet.')->assertSee('Write one')->assertSee("/topic/{$topic->public_id}/edit/en-GB", false);
 });
 
 it('writes headings in Latin script in the display font and Greek and Cyrillic ones in the body font', function () {
@@ -211,15 +205,13 @@ it('keeps a draft or machine name marked as needing checking, and nothing else',
     expect(substr_count($html, '(needs checking)'))->toBe(2);
 });
 
-it('says when the name is not yet in the visitor\'s language, and offers a translation only when the editor exists', function () {
+it('says when the name is not yet in the visitor language, and offers a translation', function () {
     $topic = pageTopic(['en-GB' => 'Fractions']);
 
-    $this->get(topicUrl($topic, 'fractions', '?lang=ro-RO'))->assertSee('Not in Română yet.')->assertDontSee('+ translate it');
-
-    Route::get('/topic/{concept}/edit/{locale}', fn () => 'edit')->name('topic.edit');
-    Route::getRoutes()->refreshNameLookups();
-
-    $this->get(topicUrl($topic, 'fractions', '?lang=ro-RO'))->assertSee('+ translate it')->assertSee("/topic/{$topic->public_id}/edit/ro-RO", false);
+    $this->get(topicUrl($topic, 'fractions', '?lang=ro-RO'))
+        ->assertSee('Not in Română yet.')
+        ->assertSee('+ translate it')
+        ->assertSee("/topic/{$topic->public_id}/edit/ro-RO", false);
 });
 
 it('does not say that when the name is in the first-choice language', function () {

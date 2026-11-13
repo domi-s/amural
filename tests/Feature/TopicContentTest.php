@@ -336,17 +336,10 @@ it('shows each credit once however many items share it, and no sources line when
 
 // History and edit
 
-it('shows History and Edit only when those pages exist, and Edit only when signed in', function () {
-    $this->get($this->url)->assertDontSee('Topic actions');
-
-    Route::get('/topic/{concept}/history', fn () => 'history')->name('topic.history');
-    Route::get('/topic/{concept}/edit/{locale}', fn () => 'edit')->name('topic.edit');
-    refreshRoutes();
-
-    $this->get($this->url)->assertSee('History')->assertDontSee('Edit this topic');
+it('shows Edit only when signed in', function () {
+    $this->get($this->url)->assertDontSee('Edit this topic');
 
     $this->actingAs(UserFactory::new()->create())->get($this->url)
-        ->assertSee('History')
         ->assertSee('Edit this topic')
         ->assertSee("/topic/{$this->topic->public_id}/edit/en-GB", false);
 });
